@@ -1,4 +1,4 @@
-# rooms
+# messages
 
 ## Description
 
@@ -6,13 +6,16 @@
 <summary><strong>Table Definition</strong></summary>
 
 ```sql
-CREATE TABLE `rooms` (
+CREATE TABLE `messages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `post_id` int(11) NOT NULL,
+  `body` varchar(255) COLLATE utf8mb4_ja_0900_as_cs NOT NULL,
+  `room_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `post_id` (`post_id`)
+  KEY `room_id` (`room_id`),
+  CONSTRAINT `messages_ibfk_1` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_ja_0900_as_cs
 ```
 
@@ -22,8 +25,10 @@ CREATE TABLE `rooms` (
 
 | Name | Type | Default | Nullable | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| id | int(11) |  | false | [members](members.md) [messages](messages.md) |  |  |
-| post_id | int(11) |  | false |  |  |  |
+| id | int(11) |  | false |  |  |  |
+| body | varchar(255) |  | false |  |  |  |
+| room_id | int(11) |  | false |  | [rooms](rooms.md) |  |
+| user_id | int(11) |  | false |  |  |  |
 | created_at | datetime |  | false |  |  |  |
 | updated_at | datetime |  | false |  |  |  |
 
@@ -31,15 +36,19 @@ CREATE TABLE `rooms` (
 
 | Name | Type | Definition |
 | ---- | ---- | ---------- |
-| post_id | UNIQUE | UNIQUE KEY post_id (post_id) |
+| messages_ibfk_1 | FOREIGN KEY | FOREIGN KEY (room_id) REFERENCES rooms (id) |
 | PRIMARY | PRIMARY KEY | PRIMARY KEY (id) |
 
 ## Indexes
 
 | Name | Definition |
 | ---- | ---------- |
+| room_id | KEY room_id (room_id) USING BTREE |
 | PRIMARY | PRIMARY KEY (id) USING BTREE |
-| post_id | UNIQUE KEY post_id (post_id) USING BTREE |
+
+## Relations
+
+![er](messages.svg)
 
 ---
 

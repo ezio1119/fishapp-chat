@@ -216,6 +216,96 @@ var _ interface {
 	ErrorName() string
 } = RoomValidationError{}
 
+// Validate checks the field values on Member with the rules defined in the
+// proto definition for this message. If any rules are violated, an error is returned.
+func (m *Member) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	// no validation rules for Id
+
+	// no validation rules for RoomId
+
+	// no validation rules for UserId
+
+	if v, ok := interface{}(m.GetCreatedAt()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return MemberValidationError{
+				field:  "CreatedAt",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if v, ok := interface{}(m.GetUpdatedAt()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return MemberValidationError{
+				field:  "UpdatedAt",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	return nil
+}
+
+// MemberValidationError is the validation error returned by Member.Validate if
+// the designated constraints aren't met.
+type MemberValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e MemberValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e MemberValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e MemberValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e MemberValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e MemberValidationError) ErrorName() string { return "MemberValidationError" }
+
+// Error satisfies the builtin error interface
+func (e MemberValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sMember.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = MemberValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = MemberValidationError{}
+
 // Validate checks the field values on SendMessageReq with the rules defined in
 // the proto definition for this message. If any rules are violated, an error
 // is returned.
@@ -297,23 +387,28 @@ var _ interface {
 	ErrorName() string
 } = SendMessageReqValidationError{}
 
-// Validate checks the field values on ReceiveMessageReq with the rules defined
+// Validate checks the field values on StreamMessageReq with the rules defined
 // in the proto definition for this message. If any rules are violated, an
 // error is returned.
-func (m *ReceiveMessageReq) Validate() error {
+func (m *StreamMessageReq) Validate() error {
 	if m == nil {
 		return nil
 	}
 
-	if m.GetRoomId() < 1 {
-		return ReceiveMessageReqValidationError{
-			field:  "RoomId",
-			reason: "value must be greater than or equal to 1",
+	for idx, item := range m.GetRoomIds() {
+		_, _ = idx, item
+
+		if item < 1 {
+			return StreamMessageReqValidationError{
+				field:  fmt.Sprintf("RoomIds[%v]", idx),
+				reason: "value must be greater than or equal to 1",
+			}
 		}
+
 	}
 
 	if m.GetUserId() < 1 {
-		return ReceiveMessageReqValidationError{
+		return StreamMessageReqValidationError{
 			field:  "UserId",
 			reason: "value must be greater than or equal to 1",
 		}
@@ -322,9 +417,9 @@ func (m *ReceiveMessageReq) Validate() error {
 	return nil
 }
 
-// ReceiveMessageReqValidationError is the validation error returned by
-// ReceiveMessageReq.Validate if the designated constraints aren't met.
-type ReceiveMessageReqValidationError struct {
+// StreamMessageReqValidationError is the validation error returned by
+// StreamMessageReq.Validate if the designated constraints aren't met.
+type StreamMessageReqValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -332,24 +427,22 @@ type ReceiveMessageReqValidationError struct {
 }
 
 // Field function returns field value.
-func (e ReceiveMessageReqValidationError) Field() string { return e.field }
+func (e StreamMessageReqValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ReceiveMessageReqValidationError) Reason() string { return e.reason }
+func (e StreamMessageReqValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ReceiveMessageReqValidationError) Cause() error { return e.cause }
+func (e StreamMessageReqValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ReceiveMessageReqValidationError) Key() bool { return e.key }
+func (e StreamMessageReqValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ReceiveMessageReqValidationError) ErrorName() string {
-	return "ReceiveMessageReqValidationError"
-}
+func (e StreamMessageReqValidationError) ErrorName() string { return "StreamMessageReqValidationError" }
 
 // Error satisfies the builtin error interface
-func (e ReceiveMessageReqValidationError) Error() string {
+func (e StreamMessageReqValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -361,14 +454,14 @@ func (e ReceiveMessageReqValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sReceiveMessageReq.%s: %s%s",
+		"invalid %sStreamMessageReq.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ReceiveMessageReqValidationError{}
+var _ error = StreamMessageReqValidationError{}
 
 var _ interface {
 	Field() string
@@ -376,7 +469,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ReceiveMessageReqValidationError{}
+} = StreamMessageReqValidationError{}
 
 // Validate checks the field values on AddMemberReq with the rules defined in
 // the proto definition for this message. If any rules are violated, an error
@@ -468,6 +561,13 @@ func (m *CreateRoomReq) Validate() error {
 	if m.GetPostId() < 1 {
 		return CreateRoomReqValidationError{
 			field:  "PostId",
+			reason: "value must be greater than or equal to 1",
+		}
+	}
+
+	if m.GetUserId() < 1 {
+		return CreateRoomReqValidationError{
+			field:  "UserId",
 			reason: "value must be greater than or equal to 1",
 		}
 	}

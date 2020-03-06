@@ -1,0 +1,20 @@
+db:
+  dbms: mysql
+  name: chat_DB
+  user: root
+  pass: password
+  net: tcp
+  host: chat-db
+  port: 3306
+  parsetime: true
+  allowNativePasswords: true
+kvs:
+  db: 0
+  pass: password
+  host: chat-kvs
+  port: 6379
+  net: tcp
+sv:
+  timeout: 2
+  port: 50051
+  debug: true

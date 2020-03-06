@@ -7,7 +7,7 @@ services:
     volumes:
       - ./src/.:/app
     depends_on:
-      - notification-kvs
+      - chat-kvs
       - chat-db
     tty: true
     environment:
@@ -25,8 +25,8 @@ services:
     ports:
       - "5306:3306"
 
-  notification-kvs:
-    image: redis:5.0.7-alpine3.11
+  chat-kvs:
+    image: redis:5.0.7-alpine
     tty: true
     command: ["--requirepass", "password"]
   

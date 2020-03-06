@@ -1,0 +1,18 @@
+mode: set
+github.com/ezio1119/fishapp-chat/interfaces/repository/room_repository.go:16.62,18.2 1 1
+github.com/ezio1119/fishapp-chat/interfaces/repository/room_repository.go:20.108,22.15 2 0
+github.com/ezio1119/fishapp-chat/interfaces/repository/room_repository.go:27.2,27.33 1 0
+github.com/ezio1119/fishapp-chat/interfaces/repository/room_repository.go:30.2,30.44 1 0
+github.com/ezio1119/fishapp-chat/interfaces/repository/room_repository.go:34.2,35.43 2 0
+github.com/ezio1119/fishapp-chat/interfaces/repository/room_repository.go:39.2,39.26 1 0
+github.com/ezio1119/fishapp-chat/interfaces/repository/room_repository.go:22.15,23.31 1 0
+github.com/ezio1119/fishapp-chat/interfaces/repository/room_repository.go:23.31,25.4 1 0
+github.com/ezio1119/fishapp-chat/interfaces/repository/room_repository.go:27.33,29.3 1 0
+github.com/ezio1119/fishapp-chat/interfaces/repository/room_repository.go:30.44,33.3 2 0
+github.com/ezio1119/fishapp-chat/interfaces/repository/room_repository.go:35.43,38.3 2 0
+github.com/ezio1119/fishapp-chat/interfaces/repository/room_repository.go:42.81,43.47 1 1
+github.com/ezio1119/fishapp-chat/interfaces/repository/room_repository.go:46.2,46.12 1 0
+github.com/ezio1119/fishapp-chat/interfaces/repository/room_repository.go:43.47,45.3 1 1
+github.com/ezio1119/fishapp-chat/interfaces/repository/room_repository.go:49.91,51.68 2 1
+github.com/ezio1119/fishapp-chat/interfaces/repository/room_repository.go:54.2,54.18 1 1
+github.com/ezio1119/fishapp-chat/interfaces/repository/room_repository.go:51.68,53.3 1 0

@@ -6,10 +6,11 @@
 - [chat.proto](#chat.proto)
     - [AddMemberReq](#chat_grpc.AddMemberReq)
     - [CreateRoomReq](#chat_grpc.CreateRoomReq)
+    - [Member](#chat_grpc.Member)
     - [Message](#chat_grpc.Message)
-    - [ReceiveMessageReq](#chat_grpc.ReceiveMessageReq)
     - [Room](#chat_grpc.Room)
     - [SendMessageReq](#chat_grpc.SendMessageReq)
+    - [StreamMessageReq](#chat_grpc.StreamMessageReq)
   
   
   
@@ -52,6 +53,26 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | post_id | [int64](#int64) |  |  |
+| user_id | [int64](#int64) |  |  |
+
+
+
+
+
+
+<a name="chat_grpc.Member"></a>
+
+### Member
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [int64](#int64) |  |  |
+| room_id | [int64](#int64) |  |  |
+| user_id | [int64](#int64) |  |  |
+| created_at | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |  |
+| updated_at | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |  |
 
 
 
@@ -72,22 +93,6 @@
 | user_id | [int64](#int64) |  |  |
 | created_at | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |  |
 | updated_at | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |  |
-
-
-
-
-
-
-<a name="chat_grpc.ReceiveMessageReq"></a>
-
-### ReceiveMessageReq
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| room_id | [int64](#int64) |  |  |
-| user_id | [int64](#int64) |  |  |
 
 
 
@@ -128,6 +133,22 @@
 
 
 
+
+<a name="chat_grpc.StreamMessageReq"></a>
+
+### StreamMessageReq
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| room_ids | [int64](#int64) | repeated |  |
+| user_id | [int64](#int64) |  |  |
+
+
+
+
+
  
 
  
@@ -143,9 +164,9 @@
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
 | CreateChatRoom | [CreateRoomReq](#chat_grpc.CreateRoomReq) | [Room](#chat_grpc.Room) |  |
-| AddMemberToChatRoom | [AddMemberReq](#chat_grpc.AddMemberReq) | [.google.protobuf.BoolValue](#google.protobuf.BoolValue) |  |
-| SendMessage | [SendMessageReq](#chat_grpc.SendMessageReq) stream | [Message](#chat_grpc.Message) |  |
-| ReceiveMessage | [ReceiveMessageReq](#chat_grpc.ReceiveMessageReq) | [Message](#chat_grpc.Message) stream |  |
+| AddMember | [AddMemberReq](#chat_grpc.AddMemberReq) | [Member](#chat_grpc.Member) |  |
+| SendMessage | [SendMessageReq](#chat_grpc.SendMessageReq) | [Message](#chat_grpc.Message) |  |
+| StreamMessage | [StreamMessageReq](#chat_grpc.StreamMessageReq) | [Message](#chat_grpc.Message) stream |  |
 
  
 
