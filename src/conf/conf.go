@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/davecgh/go-spew/spew"
@@ -43,7 +42,7 @@ func init() {
 
 	viper.SetConfigName("conf")
 	viper.SetConfigType("yml")
-	viper.AddConfigPath(filepath.Join("/app", "conf"))
+	viper.AddConfigPath("conf")
 	viper.AutomaticEnv()
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
