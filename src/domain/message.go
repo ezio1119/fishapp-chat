@@ -1,7 +1,6 @@
 package domain
 
 import (
-	"encoding/json"
 	"time"
 )
 
@@ -14,10 +13,10 @@ type Message struct {
 	UpdatedAt time.Time
 }
 
-func (m *Message) MarshalBinary() ([]byte, error) {
-	return json.Marshal(m)
-}
+// func (m *Message) MarshalBinary() ([]byte, error) {
+// 	return json.Marshal(m)
+// }
 
-func (m *Message) UnmarshalBinary(data []byte) error {
-	return json.Unmarshal(data, m)
-}
+// func (m *Message) UnmarshalBinary(data []byte) error {
+// 	return json.Unmarshal(data, m)
+// }

@@ -28,8 +28,8 @@ migrate:
 	-path /sql/ -database "mysql://root:password@tcp($(API)-db:3306)/$(API)_DB" up
 
 cli:
-		docker run --rm --net=api-gateway_default namely/grpc-cli \
-		call $(API):50051 $(API)_grpc.ChatService.$(m) "$(q)" $(o)
+		docker run --entrypoint sh --rm -it --net=api-gateway_default namely/grpc-cli
+		# call $(API):50051 $(API)_grpc.ChatService.$(m) "$(q)" $(o)
 
 test:
 	$(DC) exec $(API) sh -c "go test -v -coverprofile=cover.out -coverpkg=$(a) $(a) && \
@@ -52,7 +52,7 @@ exec:
 	$(DC) exec $(API) sh
 
 logs:
-	$(DC) logs -f --tail 100 $(API)
+	docker logs -f --tail 100 $(API)_$(API)_1
 
 redis:
 	$(DC) exec $(API)-kvs sh
