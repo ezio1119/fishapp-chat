@@ -399,6 +399,13 @@ func (m *GetRoomReq) Validate() error {
 		}
 	}
 
+	if m.GetUserId() < 1 {
+		return GetRoomReqValidationError{
+			field:  "UserId",
+			reason: "value must be greater than or equal to 1",
+		}
+	}
+
 	return nil
 }
 
@@ -467,6 +474,13 @@ func (m *ListMembersReq) Validate() error {
 	if m.GetRoomId() < 1 {
 		return ListMembersReqValidationError{
 			field:  "RoomId",
+			reason: "value must be greater than or equal to 1",
+		}
+	}
+
+	if m.GetUserId() < 1 {
+		return ListMembersReqValidationError{
+			field:  "UserId",
 			reason: "value must be greater than or equal to 1",
 		}
 	}
@@ -855,7 +869,19 @@ func (m *ListMessagesReq) Validate() error {
 		return nil
 	}
 
-	// no validation rules for RoomId
+	if m.GetRoomId() < 1 {
+		return ListMessagesReqValidationError{
+			field:  "RoomId",
+			reason: "value must be greater than or equal to 1",
+		}
+	}
+
+	if m.GetUserId() < 1 {
+		return ListMessagesReqValidationError{
+			field:  "UserId",
+			reason: "value must be greater than or equal to 1",
+		}
+	}
 
 	return nil
 }

@@ -32,7 +32,7 @@ func (c *chatController) CreateRoom(ctx context.Context, in *chat_grpc.CreateRoo
 }
 
 func (c *chatController) GetRoom(ctx context.Context, in *chat_grpc.GetRoomReq) (*chat_grpc.Room, error) {
-	r, err := c.chatInteractor.GetRoom(ctx, in.PostId)
+	r, err := c.chatInteractor.GetRoom(ctx, in.PostId, in.UserId)
 	if err != nil {
 		return nil, err
 	}
@@ -40,7 +40,7 @@ func (c *chatController) GetRoom(ctx context.Context, in *chat_grpc.GetRoomReq) 
 }
 
 func (c *chatController) ListMembers(ctx context.Context, in *chat_grpc.ListMembersReq) (*chat_grpc.ListMembersRes, error) {
-	list, err := c.chatInteractor.ListMembers(ctx, in.RoomId)
+	list, err := c.chatInteractor.ListMembers(ctx, in.RoomId, in.UserId)
 	if err != nil {
 		return nil, err
 	}
@@ -60,17 +60,14 @@ func (c *chatController) CreateMember(ctx context.Context, in *chat_grpc.CreateM
 }
 
 func (c *chatController) DeleteMember(ctx context.Context, in *chat_grpc.DeleteMemberReq) (*empty.Empty, error) {
-	if err := c.chatInteractor.DeleteMember(ctx, &domain.Member{
-		RoomID: in.RoomId,
-		UserID: in.UserId,
-	}); err != nil {
+	if err := c.chatInteractor.DeleteMember(ctx, in.RoomId, in.UserId); err != nil {
 		return nil, err
 	}
 	return &empty.Empty{}, nil
 }
 
 func (c *chatController) ListMessages(ctx context.Context, in *chat_grpc.ListMessagesReq) (*chat_grpc.ListMessagesRes, error) {
-	list, err := c.chatInteractor.ListMessages(ctx, in.RoomId)
+	list, err := c.chatInteractor.ListMessages(ctx, in.RoomId, in.UserId)
 	if err != nil {
 		return nil, err
 	}
