@@ -240,6 +240,45 @@ func (m *Message) GetUpdatedAt() *timestamp.Timestamp {
 	return nil
 }
 
+type GetRoomReq struct {
+	PostId               int64    `protobuf:"varint,1,opt,name=post_id,json=postId,proto3" json:"post_id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetRoomReq) Reset()         { *m = GetRoomReq{} }
+func (m *GetRoomReq) String() string { return proto.CompactTextString(m) }
+func (*GetRoomReq) ProtoMessage()    {}
+func (*GetRoomReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8c585a45e2093e54, []int{3}
+}
+
+func (m *GetRoomReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetRoomReq.Unmarshal(m, b)
+}
+func (m *GetRoomReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetRoomReq.Marshal(b, m, deterministic)
+}
+func (m *GetRoomReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetRoomReq.Merge(m, src)
+}
+func (m *GetRoomReq) XXX_Size() int {
+	return xxx_messageInfo_GetRoomReq.Size(m)
+}
+func (m *GetRoomReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetRoomReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetRoomReq proto.InternalMessageInfo
+
+func (m *GetRoomReq) GetPostId() int64 {
+	if m != nil {
+		return m.PostId
+	}
+	return 0
+}
+
 type CreateRoomReq struct {
 	PostId               int64    `protobuf:"varint,1,opt,name=post_id,json=postId,proto3" json:"post_id,omitempty"`
 	UserId               int64    `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
@@ -252,7 +291,7 @@ func (m *CreateRoomReq) Reset()         { *m = CreateRoomReq{} }
 func (m *CreateRoomReq) String() string { return proto.CompactTextString(m) }
 func (*CreateRoomReq) ProtoMessage()    {}
 func (*CreateRoomReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8c585a45e2093e54, []int{3}
+	return fileDescriptor_8c585a45e2093e54, []int{4}
 }
 
 func (m *CreateRoomReq) XXX_Unmarshal(b []byte) error {
@@ -287,47 +326,47 @@ func (m *CreateRoomReq) GetUserId() int64 {
 	return 0
 }
 
-type GetRoomReq struct {
-	PostId               int64    `protobuf:"varint,1,opt,name=post_id,json=postId,proto3" json:"post_id,omitempty"`
+type GetMemberReq struct {
+	RoomId               int64    `protobuf:"varint,1,opt,name=room_id,json=roomId,proto3" json:"room_id,omitempty"`
 	UserId               int64    `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetRoomReq) Reset()         { *m = GetRoomReq{} }
-func (m *GetRoomReq) String() string { return proto.CompactTextString(m) }
-func (*GetRoomReq) ProtoMessage()    {}
-func (*GetRoomReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8c585a45e2093e54, []int{4}
+func (m *GetMemberReq) Reset()         { *m = GetMemberReq{} }
+func (m *GetMemberReq) String() string { return proto.CompactTextString(m) }
+func (*GetMemberReq) ProtoMessage()    {}
+func (*GetMemberReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8c585a45e2093e54, []int{5}
 }
 
-func (m *GetRoomReq) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetRoomReq.Unmarshal(m, b)
+func (m *GetMemberReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetMemberReq.Unmarshal(m, b)
 }
-func (m *GetRoomReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetRoomReq.Marshal(b, m, deterministic)
+func (m *GetMemberReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetMemberReq.Marshal(b, m, deterministic)
 }
-func (m *GetRoomReq) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetRoomReq.Merge(m, src)
+func (m *GetMemberReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetMemberReq.Merge(m, src)
 }
-func (m *GetRoomReq) XXX_Size() int {
-	return xxx_messageInfo_GetRoomReq.Size(m)
+func (m *GetMemberReq) XXX_Size() int {
+	return xxx_messageInfo_GetMemberReq.Size(m)
 }
-func (m *GetRoomReq) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetRoomReq.DiscardUnknown(m)
+func (m *GetMemberReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetMemberReq.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_GetRoomReq proto.InternalMessageInfo
+var xxx_messageInfo_GetMemberReq proto.InternalMessageInfo
 
-func (m *GetRoomReq) GetPostId() int64 {
+func (m *GetMemberReq) GetRoomId() int64 {
 	if m != nil {
-		return m.PostId
+		return m.RoomId
 	}
 	return 0
 }
 
-func (m *GetRoomReq) GetUserId() int64 {
+func (m *GetMemberReq) GetUserId() int64 {
 	if m != nil {
 		return m.UserId
 	}
@@ -346,7 +385,7 @@ func (m *ListMembersReq) Reset()         { *m = ListMembersReq{} }
 func (m *ListMembersReq) String() string { return proto.CompactTextString(m) }
 func (*ListMembersReq) ProtoMessage()    {}
 func (*ListMembersReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8c585a45e2093e54, []int{5}
+	return fileDescriptor_8c585a45e2093e54, []int{6}
 }
 
 func (m *ListMembersReq) XXX_Unmarshal(b []byte) error {
@@ -392,7 +431,7 @@ func (m *ListMembersRes) Reset()         { *m = ListMembersRes{} }
 func (m *ListMembersRes) String() string { return proto.CompactTextString(m) }
 func (*ListMembersRes) ProtoMessage()    {}
 func (*ListMembersRes) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8c585a45e2093e54, []int{6}
+	return fileDescriptor_8c585a45e2093e54, []int{7}
 }
 
 func (m *ListMembersRes) XXX_Unmarshal(b []byte) error {
@@ -432,7 +471,7 @@ func (m *CreateMemberReq) Reset()         { *m = CreateMemberReq{} }
 func (m *CreateMemberReq) String() string { return proto.CompactTextString(m) }
 func (*CreateMemberReq) ProtoMessage()    {}
 func (*CreateMemberReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8c585a45e2093e54, []int{7}
+	return fileDescriptor_8c585a45e2093e54, []int{8}
 }
 
 func (m *CreateMemberReq) XXX_Unmarshal(b []byte) error {
@@ -479,7 +518,7 @@ func (m *DeleteMemberReq) Reset()         { *m = DeleteMemberReq{} }
 func (m *DeleteMemberReq) String() string { return proto.CompactTextString(m) }
 func (*DeleteMemberReq) ProtoMessage()    {}
 func (*DeleteMemberReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8c585a45e2093e54, []int{8}
+	return fileDescriptor_8c585a45e2093e54, []int{9}
 }
 
 func (m *DeleteMemberReq) XXX_Unmarshal(b []byte) error {
@@ -527,7 +566,7 @@ func (m *CreateMessageReq) Reset()         { *m = CreateMessageReq{} }
 func (m *CreateMessageReq) String() string { return proto.CompactTextString(m) }
 func (*CreateMessageReq) ProtoMessage()    {}
 func (*CreateMessageReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8c585a45e2093e54, []int{9}
+	return fileDescriptor_8c585a45e2093e54, []int{10}
 }
 
 func (m *CreateMessageReq) XXX_Unmarshal(b []byte) error {
@@ -571,7 +610,6 @@ func (m *CreateMessageReq) GetUserId() int64 {
 
 type ListMessagesReq struct {
 	RoomId               int64    `protobuf:"varint,1,opt,name=room_id,json=roomId,proto3" json:"room_id,omitempty"`
-	UserId               int64    `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -581,7 +619,7 @@ func (m *ListMessagesReq) Reset()         { *m = ListMessagesReq{} }
 func (m *ListMessagesReq) String() string { return proto.CompactTextString(m) }
 func (*ListMessagesReq) ProtoMessage()    {}
 func (*ListMessagesReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8c585a45e2093e54, []int{10}
+	return fileDescriptor_8c585a45e2093e54, []int{11}
 }
 
 func (m *ListMessagesReq) XXX_Unmarshal(b []byte) error {
@@ -609,13 +647,6 @@ func (m *ListMessagesReq) GetRoomId() int64 {
 	return 0
 }
 
-func (m *ListMessagesReq) GetUserId() int64 {
-	if m != nil {
-		return m.UserId
-	}
-	return 0
-}
-
 type ListMessagesRes struct {
 	Messages             []*Message `protobuf:"bytes,1,rep,name=messages,proto3" json:"messages,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
@@ -627,7 +658,7 @@ func (m *ListMessagesRes) Reset()         { *m = ListMessagesRes{} }
 func (m *ListMessagesRes) String() string { return proto.CompactTextString(m) }
 func (*ListMessagesRes) ProtoMessage()    {}
 func (*ListMessagesRes) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8c585a45e2093e54, []int{11}
+	return fileDescriptor_8c585a45e2093e54, []int{12}
 }
 
 func (m *ListMessagesRes) XXX_Unmarshal(b []byte) error {
@@ -667,7 +698,7 @@ func (m *StreamMessageReq) Reset()         { *m = StreamMessageReq{} }
 func (m *StreamMessageReq) String() string { return proto.CompactTextString(m) }
 func (*StreamMessageReq) ProtoMessage()    {}
 func (*StreamMessageReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8c585a45e2093e54, []int{12}
+	return fileDescriptor_8c585a45e2093e54, []int{13}
 }
 
 func (m *StreamMessageReq) XXX_Unmarshal(b []byte) error {
@@ -706,8 +737,9 @@ func init() {
 	proto.RegisterType((*Room)(nil), "chat_grpc.Room")
 	proto.RegisterType((*Member)(nil), "chat_grpc.Member")
 	proto.RegisterType((*Message)(nil), "chat_grpc.Message")
-	proto.RegisterType((*CreateRoomReq)(nil), "chat_grpc.CreateRoomReq")
 	proto.RegisterType((*GetRoomReq)(nil), "chat_grpc.GetRoomReq")
+	proto.RegisterType((*CreateRoomReq)(nil), "chat_grpc.CreateRoomReq")
+	proto.RegisterType((*GetMemberReq)(nil), "chat_grpc.GetMemberReq")
 	proto.RegisterType((*ListMembersReq)(nil), "chat_grpc.ListMembersReq")
 	proto.RegisterType((*ListMembersRes)(nil), "chat_grpc.ListMembersRes")
 	proto.RegisterType((*CreateMemberReq)(nil), "chat_grpc.CreateMemberReq")
@@ -721,44 +753,45 @@ func init() {
 func init() { proto.RegisterFile("chat.proto", fileDescriptor_8c585a45e2093e54) }
 
 var fileDescriptor_8c585a45e2093e54 = []byte{
-	// 591 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x55, 0xdf, 0x6e, 0xda, 0x3e,
-	0x14, 0x96, 0x49, 0x0a, 0x3f, 0x0e, 0xb4, 0xf4, 0x67, 0x69, 0x2b, 0x73, 0x2f, 0x16, 0xe5, 0x0a,
-	0x69, 0x52, 0xd8, 0xd8, 0xc5, 0xb4, 0x8b, 0x4a, 0x03, 0xf6, 0x47, 0x95, 0x56, 0x69, 0x0a, 0xed,
-	0x6e, 0x51, 0x20, 0x1e, 0xcd, 0x44, 0xe4, 0x2c, 0x36, 0x95, 0xfa, 0x14, 0x7b, 0x8a, 0xbd, 0xc7,
-	0x5e, 0x62, 0x2f, 0xb3, 0xab, 0x29, 0x76, 0x0c, 0x4e, 0x02, 0xad, 0x5a, 0x71, 0x97, 0xc3, 0x77,
-	0xfc, 0xf9, 0x7c, 0xe7, 0x7c, 0xc7, 0x00, 0xcc, 0xaf, 0x03, 0xe1, 0x25, 0x29, 0x13, 0x0c, 0x37,
-	0xb3, 0xef, 0xe9, 0x22, 0x4d, 0xe6, 0xe4, 0xe4, 0x26, 0x58, 0x46, 0x61, 0x20, 0x68, 0x5f, 0x7f,
-	0xa8, 0x1c, 0x72, 0xba, 0x60, 0x6c, 0xb1, 0xa4, 0x7d, 0x19, 0xcd, 0x56, 0xdf, 0xfa, 0x34, 0x4e,
-	0xc4, 0x6d, 0x0e, 0x3e, 0x2f, 0x83, 0x22, 0x8a, 0x29, 0x17, 0x41, 0x9c, 0xa8, 0x04, 0xf7, 0x17,
-	0x02, 0xdb, 0x67, 0x2c, 0xc6, 0x47, 0x50, 0x8b, 0xc2, 0x2e, 0x72, 0x50, 0xcf, 0xf2, 0x6b, 0x51,
-	0x88, 0x4f, 0xa0, 0x91, 0x30, 0x2e, 0xa6, 0x51, 0xd8, 0xad, 0xc9, 0x1f, 0xeb, 0x59, 0x78, 0x1e,
-	0xe2, 0xb7, 0x00, 0xf3, 0x94, 0x06, 0x82, 0x86, 0xd3, 0x40, 0x74, 0x2d, 0x07, 0xf5, 0x5a, 0x03,
-	0xe2, 0xa9, 0x7b, 0x3c, 0x7d, 0x8f, 0x77, 0xa9, 0xef, 0xf1, 0x9b, 0x79, 0xf6, 0x50, 0x64, 0x47,
-	0x57, 0x49, 0xa8, 0x8f, 0xda, 0xf7, 0x1f, 0xcd, 0xb3, 0x87, 0xc2, 0xfd, 0x8d, 0xa0, 0x7e, 0x41,
-	0xe3, 0x19, 0x4d, 0xb7, 0x55, 0x9a, 0x32, 0x16, 0x1b, 0x95, 0x66, 0xe1, 0xb9, 0x04, 0x56, 0x9c,
-	0xa6, 0x19, 0x60, 0x29, 0x20, 0x0b, 0x2b, 0x12, 0xec, 0xc7, 0x4b, 0x38, 0x78, 0x88, 0x84, 0x3f,
-	0x08, 0x1a, 0x17, 0x94, 0xf3, 0x60, 0x41, 0x2b, 0x1a, 0x30, 0xd8, 0x33, 0x16, 0xde, 0x4a, 0x01,
-	0x4d, 0x5f, 0x7e, 0x9b, 0xba, 0xac, 0x5d, 0xba, 0xec, 0x3b, 0x74, 0x1d, 0x3c, 0x5e, 0x57, 0xfd,
-	0x21, 0xba, 0x26, 0x70, 0x38, 0x96, 0x3c, 0x99, 0x8f, 0x7c, 0xfa, 0x03, 0x3b, 0x1b, 0xeb, 0x48,
-	0x85, 0xa3, 0xc6, 0xdf, 0x91, 0xed, 0xd6, 0x7a, 0x68, 0xed, 0x21, 0x67, 0xa3, 0xa0, 0x56, 0xca,
-	0x50, 0x52, 0xdc, 0x2f, 0x00, 0x9f, 0xa8, 0xd8, 0x27, 0xe3, 0x25, 0x1c, 0x7d, 0x8e, 0xb8, 0x50,
-	0x26, 0xe2, 0x39, 0xab, 0x6e, 0x70, 0x99, 0x35, 0xef, 0xf4, 0xfd, 0xac, 0x67, 0x25, 0x56, 0x8e,
-	0x5f, 0x40, 0x23, 0x56, 0x51, 0x17, 0x39, 0x56, 0xaf, 0x35, 0xf8, 0xdf, 0x5b, 0x6f, 0xb1, 0xa7,
-	0xf2, 0x7c, 0x9d, 0xe1, 0x5e, 0x41, 0x47, 0xf5, 0x2e, 0x07, 0xf6, 0x54, 0xd5, 0x15, 0x74, 0xde,
-	0xd3, 0x25, 0xdd, 0x37, 0xed, 0x77, 0x38, 0xd6, 0xd5, 0x4a, 0x1b, 0x67, 0xbc, 0xda, 0xb9, 0xc8,
-	0x70, 0xae, 0x53, 0xda, 0xc8, 0x3b, 0xef, 0xb2, 0x76, 0x4a, 0x50, 0x8d, 0x95, 0x37, 0xed, 0x6d,
-	0x5e, 0xc3, 0x32, 0x2d, 0xc7, 0x1e, 0xfc, 0x17, 0xe7, 0x61, 0x3e, 0x31, 0x5c, 0x98, 0x98, 0x92,
-	0xba, 0xce, 0x71, 0xbf, 0xc2, 0xf1, 0x44, 0xa4, 0x34, 0x88, 0x8d, 0x2e, 0xec, 0xa1, 0xb4, 0xc1,
-	0x4f, 0x1b, 0x5a, 0xe3, 0xeb, 0x40, 0x4c, 0x68, 0x7a, 0x13, 0xcd, 0x29, 0x7e, 0x03, 0xb0, 0xd9,
-	0x2b, 0xdc, 0x35, 0x6a, 0x2a, 0xac, 0x1b, 0xe9, 0x18, 0x88, 0x4c, 0x7d, 0x05, 0x8d, 0x7c, 0x77,
-	0xf0, 0x13, 0x03, 0xdb, 0xec, 0x53, 0xf5, 0xc8, 0x18, 0x5a, 0x86, 0x8d, 0xf1, 0x33, 0x03, 0x2f,
-	0x2e, 0x0d, 0xd9, 0x09, 0x71, 0x7c, 0x06, 0x6d, 0xd3, 0xcc, 0x98, 0x54, 0x4a, 0x5e, 0xdb, 0x91,
-	0x54, 0x97, 0x02, 0x8f, 0xa0, 0x6d, 0x9a, 0xb6, 0x70, 0xbc, 0xe4, 0x66, 0xf2, 0xb4, 0xf2, 0x34,
-	0x7d, 0xc8, 0xfe, 0xf5, 0xf0, 0x47, 0x68, 0x9b, 0xe3, 0x2d, 0x70, 0x94, 0xec, 0x44, 0x76, 0x63,
-	0x1c, 0xbf, 0xd3, 0x6f, 0x9a, 0x7e, 0xb0, 0x4f, 0xb7, 0x68, 0xd1, 0xd3, 0x27, 0x5b, 0xfc, 0x82,
-	0x47, 0x70, 0x58, 0x70, 0x49, 0x81, 0xa1, 0xec, 0x9f, 0x6d, 0x0c, 0x2f, 0xd1, 0xac, 0x2e, 0xd5,
-	0xbd, 0xfe, 0x17, 0x00, 0x00, 0xff, 0xff, 0x8e, 0x49, 0xa2, 0x85, 0x13, 0x08, 0x00, 0x00,
+	// 608 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x55, 0xcd, 0x6e, 0xda, 0x40,
+	0x10, 0x96, 0xb1, 0x03, 0x65, 0x20, 0x21, 0x1d, 0xa9, 0x85, 0x3a, 0x87, 0x22, 0x9f, 0x90, 0x2a,
+	0x99, 0x96, 0x1c, 0xaa, 0x1e, 0x22, 0x15, 0x68, 0x1b, 0x45, 0x6a, 0x2e, 0x26, 0xe9, 0x15, 0x19,
+	0xbc, 0x25, 0xae, 0xb0, 0xec, 0x7a, 0x97, 0x48, 0x79, 0xa0, 0xbe, 0x47, 0x8f, 0x7d, 0x81, 0xbe,
+	0x4c, 0x4f, 0x95, 0xd7, 0xbb, 0xb0, 0xfe, 0x81, 0xfc, 0x88, 0xdb, 0x8e, 0x67, 0xe6, 0x9b, 0xf9,
+	0x66, 0xbf, 0x59, 0x03, 0xcc, 0x6f, 0x5c, 0x66, 0x47, 0x71, 0xc8, 0x42, 0xac, 0x27, 0xe7, 0xe9,
+	0x22, 0x8e, 0xe6, 0x66, 0xfb, 0xd6, 0x5d, 0xfa, 0x9e, 0xcb, 0x48, 0x5f, 0x1e, 0xd2, 0x18, 0xf3,
+	0x64, 0x11, 0x86, 0x8b, 0x25, 0xe9, 0x73, 0x6b, 0xb6, 0xfa, 0xde, 0x27, 0x41, 0xc4, 0xee, 0x84,
+	0xf3, 0x75, 0xde, 0xc9, 0xfc, 0x80, 0x50, 0xe6, 0x06, 0x51, 0x1a, 0x60, 0xfd, 0xd2, 0xc0, 0x70,
+	0xc2, 0x30, 0xc0, 0x23, 0xa8, 0xf8, 0x5e, 0x47, 0xeb, 0x6a, 0x3d, 0xdd, 0xa9, 0xf8, 0x1e, 0xb6,
+	0xa1, 0x16, 0x85, 0x94, 0x4d, 0x7d, 0xaf, 0x53, 0xe1, 0x1f, 0xab, 0x89, 0x79, 0xe1, 0xe1, 0x07,
+	0x80, 0x79, 0x4c, 0x5c, 0x46, 0xbc, 0xa9, 0xcb, 0x3a, 0x7a, 0x57, 0xeb, 0x35, 0x06, 0xa6, 0x9d,
+	0xd6, 0xb1, 0x65, 0x1d, 0xfb, 0x4a, 0xd6, 0x71, 0xea, 0x22, 0x7a, 0xc8, 0x92, 0xd4, 0x55, 0xe4,
+	0xc9, 0x54, 0xe3, 0xfe, 0x54, 0x11, 0x3d, 0x64, 0xd6, 0x6f, 0x0d, 0xaa, 0x97, 0x24, 0x98, 0x91,
+	0xb8, 0xac, 0xd3, 0x38, 0x0c, 0x03, 0xa5, 0xd3, 0xc4, 0xbc, 0xe0, 0x8e, 0x15, 0x25, 0x71, 0xe2,
+	0xd0, 0x53, 0x47, 0x62, 0x16, 0x28, 0x18, 0x4f, 0xa7, 0x70, 0xf0, 0x18, 0x0a, 0x7f, 0x35, 0xa8,
+	0x5d, 0x12, 0x4a, 0xdd, 0x05, 0x29, 0x70, 0x40, 0x30, 0x66, 0xa1, 0x77, 0xc7, 0x09, 0xd4, 0x1d,
+	0x7e, 0x56, 0x79, 0xe9, 0xdb, 0x78, 0x19, 0x3b, 0x78, 0x1d, 0x3c, 0x9d, 0x57, 0xf5, 0x31, 0xbc,
+	0x6c, 0x80, 0x73, 0xc2, 0x12, 0x11, 0x39, 0xe4, 0x27, 0x76, 0x37, 0xba, 0xe1, 0xf4, 0x46, 0xb5,
+	0x7f, 0x23, 0xc3, 0xaa, 0xf4, 0x34, 0x29, 0x20, 0x6b, 0x02, 0x87, 0x63, 0x5e, 0xf7, 0xc1, 0x29,
+	0x49, 0x84, 0x64, 0x5c, 0xc9, 0x45, 0xa4, 0xd4, 0x2d, 0x07, 0x9a, 0xe7, 0x84, 0xa5, 0x0a, 0x11,
+	0x98, 0x72, 0x78, 0x79, 0x4c, 0x31, 0xc5, 0xfb, 0x31, 0xaf, 0xe0, 0xe8, 0xab, 0x4f, 0x05, 0x28,
+	0xdd, 0x17, 0xea, 0x59, 0x0e, 0x95, 0xe2, 0x1b, 0xa8, 0x05, 0xa9, 0xd5, 0xd1, 0xba, 0x7a, 0xaf,
+	0x31, 0x78, 0x6e, 0xaf, 0xf7, 0xde, 0x16, 0x94, 0x64, 0x84, 0x75, 0x0d, 0xad, 0x74, 0x7a, 0xfb,
+	0xe5, 0x7a, 0x0d, 0xad, 0x4f, 0x64, 0x49, 0xf6, 0x0d, 0xfb, 0x03, 0x8e, 0x65, 0xb7, 0x5c, 0xf8,
+	0x09, 0xae, 0xd4, 0xba, 0xa6, 0x68, 0xbd, 0x9b, 0xdb, 0xe1, 0x9d, 0xb5, 0xf4, 0xf2, 0x5a, 0xa7,
+	0xd0, 0x4a, 0x07, 0xcb, 0x2b, 0x3d, 0xec, 0xbe, 0xac, 0x61, 0x3e, 0x89, 0xa2, 0x0d, 0xcf, 0x02,
+	0x61, 0x8a, 0xfb, 0xc0, 0xcc, 0x7d, 0xa4, 0x44, 0xd6, 0x31, 0xd6, 0x37, 0x38, 0x9e, 0xb0, 0x98,
+	0xb8, 0x81, 0xc2, 0x71, 0x0f, 0xb3, 0x1b, 0xfc, 0x31, 0xa0, 0x31, 0xbe, 0x71, 0xd9, 0x84, 0xc4,
+	0xb7, 0xfe, 0x9c, 0xe0, 0x3b, 0xa8, 0x89, 0x3d, 0xc3, 0x17, 0x4a, 0x43, 0x9b, 0xdd, 0x33, 0x5b,
+	0xca, 0x67, 0x1e, 0xf7, 0x1e, 0x60, 0xb3, 0x6a, 0xd8, 0x51, 0xdc, 0x99, 0x0d, 0x2c, 0x4b, 0xac,
+	0xaf, 0xd7, 0x09, 0xdb, 0xd9, 0x6a, 0x6b, 0x85, 0x98, 0x45, 0x9d, 0xe2, 0x18, 0x1a, 0x8a, 0xba,
+	0xf1, 0x95, 0x12, 0x91, 0xdd, 0x25, 0x73, 0xab, 0x8b, 0xe2, 0x19, 0x34, 0x55, 0x8d, 0xa3, 0x59,
+	0x68, 0x7c, 0x67, 0x0f, 0x23, 0x68, 0xaa, 0x5a, 0xce, 0xa4, 0xe7, 0x44, 0x6e, 0xbe, 0x2c, 0xbc,
+	0x71, 0x9f, 0x93, 0xdf, 0x27, 0x7e, 0x81, 0xa6, 0xaa, 0x8b, 0x0c, 0x46, 0x4e, 0x65, 0xe6, 0x76,
+	0x1f, 0xc5, 0x8f, 0xf2, 0xb1, 0x93, 0x2f, 0xff, 0x49, 0x09, 0x17, 0x29, 0x1b, 0xb3, 0x44, 0x68,
+	0x38, 0x82, 0xc3, 0x8c, 0xbc, 0x32, 0x08, 0x79, 0xe1, 0x95, 0x21, 0xbc, 0xd5, 0x66, 0x55, 0xce,
+	0xee, 0xf4, 0x7f, 0x00, 0x00, 0x00, 0xff, 0xff, 0xd7, 0x43, 0xe1, 0x41, 0x5c, 0x08, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -773,8 +806,9 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type ChatServiceClient interface {
-	CreateRoom(ctx context.Context, in *CreateRoomReq, opts ...grpc.CallOption) (*Room, error)
 	GetRoom(ctx context.Context, in *GetRoomReq, opts ...grpc.CallOption) (*Room, error)
+	CreateRoom(ctx context.Context, in *CreateRoomReq, opts ...grpc.CallOption) (*Room, error)
+	GetMember(ctx context.Context, in *GetMemberReq, opts ...grpc.CallOption) (*Member, error)
 	ListMembers(ctx context.Context, in *ListMembersReq, opts ...grpc.CallOption) (*ListMembersRes, error)
 	CreateMember(ctx context.Context, in *CreateMemberReq, opts ...grpc.CallOption) (*Member, error)
 	DeleteMember(ctx context.Context, in *DeleteMemberReq, opts ...grpc.CallOption) (*empty.Empty, error)
@@ -791,6 +825,15 @@ func NewChatServiceClient(cc grpc.ClientConnInterface) ChatServiceClient {
 	return &chatServiceClient{cc}
 }
 
+func (c *chatServiceClient) GetRoom(ctx context.Context, in *GetRoomReq, opts ...grpc.CallOption) (*Room, error) {
+	out := new(Room)
+	err := c.cc.Invoke(ctx, "/chat_grpc.ChatService/GetRoom", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *chatServiceClient) CreateRoom(ctx context.Context, in *CreateRoomReq, opts ...grpc.CallOption) (*Room, error) {
 	out := new(Room)
 	err := c.cc.Invoke(ctx, "/chat_grpc.ChatService/CreateRoom", in, out, opts...)
@@ -800,9 +843,9 @@ func (c *chatServiceClient) CreateRoom(ctx context.Context, in *CreateRoomReq, o
 	return out, nil
 }
 
-func (c *chatServiceClient) GetRoom(ctx context.Context, in *GetRoomReq, opts ...grpc.CallOption) (*Room, error) {
-	out := new(Room)
-	err := c.cc.Invoke(ctx, "/chat_grpc.ChatService/GetRoom", in, out, opts...)
+func (c *chatServiceClient) GetMember(ctx context.Context, in *GetMemberReq, opts ...grpc.CallOption) (*Member, error) {
+	out := new(Member)
+	err := c.cc.Invoke(ctx, "/chat_grpc.ChatService/GetMember", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -888,8 +931,9 @@ func (x *chatServiceStreamMessageClient) Recv() (*Message, error) {
 
 // ChatServiceServer is the server API for ChatService service.
 type ChatServiceServer interface {
-	CreateRoom(context.Context, *CreateRoomReq) (*Room, error)
 	GetRoom(context.Context, *GetRoomReq) (*Room, error)
+	CreateRoom(context.Context, *CreateRoomReq) (*Room, error)
+	GetMember(context.Context, *GetMemberReq) (*Member, error)
 	ListMembers(context.Context, *ListMembersReq) (*ListMembersRes, error)
 	CreateMember(context.Context, *CreateMemberReq) (*Member, error)
 	DeleteMember(context.Context, *DeleteMemberReq) (*empty.Empty, error)
@@ -902,11 +946,14 @@ type ChatServiceServer interface {
 type UnimplementedChatServiceServer struct {
 }
 
+func (*UnimplementedChatServiceServer) GetRoom(ctx context.Context, req *GetRoomReq) (*Room, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRoom not implemented")
+}
 func (*UnimplementedChatServiceServer) CreateRoom(ctx context.Context, req *CreateRoomReq) (*Room, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateRoom not implemented")
 }
-func (*UnimplementedChatServiceServer) GetRoom(ctx context.Context, req *GetRoomReq) (*Room, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetRoom not implemented")
+func (*UnimplementedChatServiceServer) GetMember(ctx context.Context, req *GetMemberReq) (*Member, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMember not implemented")
 }
 func (*UnimplementedChatServiceServer) ListMembers(ctx context.Context, req *ListMembersReq) (*ListMembersRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMembers not implemented")
@@ -931,6 +978,24 @@ func RegisterChatServiceServer(s *grpc.Server, srv ChatServiceServer) {
 	s.RegisterService(&_ChatService_serviceDesc, srv)
 }
 
+func _ChatService_GetRoom_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRoomReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ChatServiceServer).GetRoom(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/chat_grpc.ChatService/GetRoom",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ChatServiceServer).GetRoom(ctx, req.(*GetRoomReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ChatService_CreateRoom_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateRoomReq)
 	if err := dec(in); err != nil {
@@ -949,20 +1014,20 @@ func _ChatService_CreateRoom_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ChatService_GetRoom_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetRoomReq)
+func _ChatService_GetMember_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMemberReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChatServiceServer).GetRoom(ctx, in)
+		return srv.(ChatServiceServer).GetMember(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/chat_grpc.ChatService/GetRoom",
+		FullMethod: "/chat_grpc.ChatService/GetMember",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServiceServer).GetRoom(ctx, req.(*GetRoomReq))
+		return srv.(ChatServiceServer).GetMember(ctx, req.(*GetMemberReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1083,12 +1148,16 @@ var _ChatService_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*ChatServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "GetRoom",
+			Handler:    _ChatService_GetRoom_Handler,
+		},
+		{
 			MethodName: "CreateRoom",
 			Handler:    _ChatService_CreateRoom_Handler,
 		},
 		{
-			MethodName: "GetRoom",
-			Handler:    _ChatService_GetRoom_Handler,
+			MethodName: "GetMember",
+			Handler:    _ChatService_GetMember_Handler,
 		},
 		{
 			MethodName: "ListMembers",

@@ -306,6 +306,77 @@ var _ interface {
 	ErrorName() string
 } = MessageValidationError{}
 
+// Validate checks the field values on GetRoomReq with the rules defined in the
+// proto definition for this message. If any rules are violated, an error is returned.
+func (m *GetRoomReq) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.GetPostId() < 1 {
+		return GetRoomReqValidationError{
+			field:  "PostId",
+			reason: "value must be greater than or equal to 1",
+		}
+	}
+
+	return nil
+}
+
+// GetRoomReqValidationError is the validation error returned by
+// GetRoomReq.Validate if the designated constraints aren't met.
+type GetRoomReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetRoomReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetRoomReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetRoomReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetRoomReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetRoomReqValidationError) ErrorName() string { return "GetRoomReqValidationError" }
+
+// Error satisfies the builtin error interface
+func (e GetRoomReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetRoomReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetRoomReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetRoomReqValidationError{}
+
 // Validate checks the field values on CreateRoomReq with the rules defined in
 // the proto definition for this message. If any rules are violated, an error
 // is returned.
@@ -385,22 +456,23 @@ var _ interface {
 	ErrorName() string
 } = CreateRoomReqValidationError{}
 
-// Validate checks the field values on GetRoomReq with the rules defined in the
-// proto definition for this message. If any rules are violated, an error is returned.
-func (m *GetRoomReq) Validate() error {
+// Validate checks the field values on GetMemberReq with the rules defined in
+// the proto definition for this message. If any rules are violated, an error
+// is returned.
+func (m *GetMemberReq) Validate() error {
 	if m == nil {
 		return nil
 	}
 
-	if m.GetPostId() < 1 {
-		return GetRoomReqValidationError{
-			field:  "PostId",
+	if m.GetRoomId() < 1 {
+		return GetMemberReqValidationError{
+			field:  "RoomId",
 			reason: "value must be greater than or equal to 1",
 		}
 	}
 
 	if m.GetUserId() < 1 {
-		return GetRoomReqValidationError{
+		return GetMemberReqValidationError{
 			field:  "UserId",
 			reason: "value must be greater than or equal to 1",
 		}
@@ -409,9 +481,9 @@ func (m *GetRoomReq) Validate() error {
 	return nil
 }
 
-// GetRoomReqValidationError is the validation error returned by
-// GetRoomReq.Validate if the designated constraints aren't met.
-type GetRoomReqValidationError struct {
+// GetMemberReqValidationError is the validation error returned by
+// GetMemberReq.Validate if the designated constraints aren't met.
+type GetMemberReqValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -419,22 +491,22 @@ type GetRoomReqValidationError struct {
 }
 
 // Field function returns field value.
-func (e GetRoomReqValidationError) Field() string { return e.field }
+func (e GetMemberReqValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e GetRoomReqValidationError) Reason() string { return e.reason }
+func (e GetMemberReqValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e GetRoomReqValidationError) Cause() error { return e.cause }
+func (e GetMemberReqValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e GetRoomReqValidationError) Key() bool { return e.key }
+func (e GetMemberReqValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e GetRoomReqValidationError) ErrorName() string { return "GetRoomReqValidationError" }
+func (e GetMemberReqValidationError) ErrorName() string { return "GetMemberReqValidationError" }
 
 // Error satisfies the builtin error interface
-func (e GetRoomReqValidationError) Error() string {
+func (e GetMemberReqValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -446,14 +518,14 @@ func (e GetRoomReqValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sGetRoomReq.%s: %s%s",
+		"invalid %sGetMemberReq.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = GetRoomReqValidationError{}
+var _ error = GetMemberReqValidationError{}
 
 var _ interface {
 	Field() string
@@ -461,7 +533,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = GetRoomReqValidationError{}
+} = GetMemberReqValidationError{}
 
 // Validate checks the field values on ListMembersReq with the rules defined in
 // the proto definition for this message. If any rules are violated, an error
@@ -872,13 +944,6 @@ func (m *ListMessagesReq) Validate() error {
 	if m.GetRoomId() < 1 {
 		return ListMessagesReqValidationError{
 			field:  "RoomId",
-			reason: "value must be greater than or equal to 1",
-		}
-	}
-
-	if m.GetUserId() < 1 {
-		return ListMessagesReqValidationError{
-			field:  "UserId",
 			reason: "value must be greater than or equal to 1",
 		}
 	}
