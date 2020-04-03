@@ -48,7 +48,7 @@ func (c *chatController) GetMember(ctx context.Context, in *chat_grpc.GetMemberR
 }
 
 func (c *chatController) ListMembers(ctx context.Context, in *chat_grpc.ListMembersReq) (*chat_grpc.ListMembersRes, error) {
-	list, err := c.chatInteractor.ListMembers(ctx, in.RoomId, in.UserId)
+	list, err := c.chatInteractor.ListMembers(ctx, in.RoomId)
 	if err != nil {
 		return nil, err
 	}

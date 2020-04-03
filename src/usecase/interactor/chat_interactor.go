@@ -18,7 +18,7 @@ import (
 type ChatInteractor interface {
 	CreateRoom(ctx context.Context, r *domain.Room) error
 	GetRoom(ctx context.Context, postID int64) (*domain.Room, error)
-	ListMembers(ctx context.Context, roomID int64, userID int64) ([]*domain.Member, error)
+	ListMembers(ctx context.Context, roomID int64) ([]*domain.Member, error)
 	GetMember(ctx context.Context, roomID int64, userID int64) (*domain.Member, error)
 	CreateMember(ctx context.Context, m *domain.Member) error
 	DeleteMember(ctx context.Context, roomID int64, userID int64) error
@@ -65,7 +65,7 @@ func (i *chatInteractor) GetMember(ctx context.Context, rID int64, uID int64) (*
 	m := &domain.Member{}
 	if err := i.db.Where("room_id = ? AND user_id = ?", rID, uID).Take(m).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
-			err = status.Errorf(codes.PermissionDenied, "user_id='%d' is not a member of the room_id='%d': %s", uID, rID, err.Error())
+			err = status.Errorf(codes.NotFound, "member with user_id='%d', room_id='%d' is not found", uID, rID)
 		}
 		return nil, err
 	}
@@ -73,13 +73,7 @@ func (i *chatInteractor) GetMember(ctx context.Context, rID int64, uID int64) (*
 	return m, nil
 }
 
-func (i *chatInteractor) ListMembers(ctx context.Context, rID int64, uID int64) ([]*domain.Member, error) {
-	if err := i.db.Where("room_id = ? AND user_id = ?", rID, uID).Take(&domain.Member{}).Error; err != nil {
-		if gorm.IsRecordNotFoundError(err) {
-			err = status.Errorf(codes.PermissionDenied, "user_id='%d' is not a member of the room_id='%d': %s", uID, rID, err.Error())
-		}
-		return nil, err
-	}
+func (i *chatInteractor) ListMembers(ctx context.Context, rID int64) ([]*domain.Member, error) {
 	r := &domain.Room{ID: rID}
 	if err := i.db.Model(r).Related(&r.Members).Error; err != nil {
 		return nil, err
@@ -101,15 +95,7 @@ func (i *chatInteractor) CreateMember(ctx context.Context, m *domain.Member) err
 }
 
 func (i *chatInteractor) DeleteMember(ctx context.Context, rID int64, uID int64) error {
-	m := &domain.Member{}
-	if err := i.db.Where("room_id = ? AND user_id = ?", rID, uID).Take(m).Error; err != nil {
-		if gorm.IsRecordNotFoundError(err) {
-			err = status.Errorf(codes.InvalidArgument, "user_id='%d' is not a member of the room_id='%d': %s", uID, rID, err.Error())
-		}
-		return err
-	}
-
-	if err := i.db.Delete(m).Error; err != nil {
+	if err := i.db.Where("room_id = ? AND user_id = ?", rID, uID).Delete(&domain.Member{}).Error; err != nil {
 		return err
 	}
 	return nil
@@ -124,22 +110,7 @@ func (i *chatInteractor) ListMessages(ctx context.Context, rID int64) ([]*domain
 }
 
 func (i *chatInteractor) CreateMessage(ctx context.Context, m *domain.Message) error {
-	if err := i.db.Where("room_id = ? AND user_id = ?", m.RoomID, m.UserID).Take(&domain.Member{}).Error; err != nil {
-		if gorm.IsRecordNotFoundError(err) {
-			err = status.Errorf(codes.PermissionDenied, "user_id='%d' is not a member of the room_id='%d': %s", m.UserID, m.RoomID, err.Error())
-		}
-		return err
-	}
 	if err := i.db.Create(m).Error; err != nil {
-		e, ok := err.(*mysql.MySQLError)
-		if ok {
-			if e.Number == 1062 {
-				err = status.Error(codes.AlreadyExists, err.Error())
-			}
-			// if e.Number == 1452 {
-			// 	err = status.Error(codes.InvalidArgument, err.Error())
-			// }
-		}
 		return err
 	}
 

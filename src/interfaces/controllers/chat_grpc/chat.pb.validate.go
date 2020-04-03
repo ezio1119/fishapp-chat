@@ -550,13 +550,6 @@ func (m *ListMembersReq) Validate() error {
 		}
 	}
 
-	if m.GetUserId() < 1 {
-		return ListMembersReqValidationError{
-			field:  "UserId",
-			reason: "value must be greater than or equal to 1",
-		}
-	}
-
 	return nil
 }
 
