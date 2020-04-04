@@ -8,6 +8,8 @@ import (
 	"github.com/ezio1119/fishapp-chat/usecase/interactor"
 	"github.com/golang/protobuf/ptypes/empty"
 	"golang.org/x/sync/errgroup"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type chatController struct {
@@ -19,7 +21,10 @@ func NewChatController(ci interactor.ChatInteractor) chat_grpc.ChatServiceServer
 }
 
 func (c *chatController) GetRoom(ctx context.Context, in *chat_grpc.GetRoomReq) (*chat_grpc.Room, error) {
-	r, err := c.chatInteractor.GetRoom(ctx, in.PostId)
+	if (in.Id == 0 && in.PostId == 0) || (in.Id != 0 && in.PostId != 0) {
+		return nil, status.Error(codes.InvalidArgument, "invalid GetRoomReq.Id, GetRoomReq.PostId: value must be set either id or post_id")
+	}
+	r, err := c.chatInteractor.GetRoom(ctx, in.Id, in.PostId)
 	if err != nil {
 		return nil, err
 	}

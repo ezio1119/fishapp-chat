@@ -17,7 +17,7 @@ import (
 
 type ChatInteractor interface {
 	CreateRoom(ctx context.Context, r *domain.Room) error
-	GetRoom(ctx context.Context, postID int64) (*domain.Room, error)
+	GetRoom(ctx context.Context, id int64, postID int64) (*domain.Room, error)
 	ListMembers(ctx context.Context, roomID int64) ([]*domain.Member, error)
 	GetMember(ctx context.Context, roomID int64, userID int64) (*domain.Member, error)
 	CreateMember(ctx context.Context, m *domain.Member) error
@@ -39,24 +39,22 @@ func NewChatInteractor(db *gorm.DB, redis *redis.Client, t time.Duration) ChatIn
 
 func (i *chatInteractor) CreateRoom(ctx context.Context, r *domain.Room) error {
 	if err := i.db.Create(r).Error; err != nil {
-		e, ok := err.(*mysql.MySQLError)
-		if ok {
-			if e.Number == 1062 {
-				err = status.Error(codes.AlreadyExists, err.Error())
-			}
-		}
 		return err
 	}
 	return nil
 }
 
-func (i *chatInteractor) GetRoom(ctx context.Context, pID int64) (*domain.Room, error) {
+func (i *chatInteractor) GetRoom(ctx context.Context, id int64, pID int64) (*domain.Room, error) {
 	r := &domain.Room{}
-	if err := i.db.Where("post_id = ?", pID).Take(&r).Error; err != nil {
-		if gorm.IsRecordNotFoundError(err) {
-			err = status.Errorf(codes.NotFound, "room with post_id='%d' is not found", pID)
+	if id != 0 {
+		if err := i.db.Take(id, &r).Error; err != nil {
+			return nil, err
 		}
-		return nil, err
+	}
+	if pID != 0 {
+		if err := i.db.Where("post_id = ?", pID).Take(&r).Error; err != nil {
+			return nil, err
+		}
 	}
 	return r, nil
 }

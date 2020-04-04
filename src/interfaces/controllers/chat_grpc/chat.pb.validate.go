@@ -313,12 +313,9 @@ func (m *GetRoomReq) Validate() error {
 		return nil
 	}
 
-	if m.GetPostId() < 1 {
-		return GetRoomReqValidationError{
-			field:  "PostId",
-			reason: "value must be greater than or equal to 1",
-		}
-	}
+	// no validation rules for Id
+
+	// no validation rules for PostId
 
 	return nil
 }
