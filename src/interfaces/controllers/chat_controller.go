@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/ezio1119/fishapp-chat/domain"
-	"github.com/ezio1119/fishapp-chat/interfaces/controllers/chat_grpc"
+	"github.com/ezio1119/fishapp-chat/pb/chat"
 	"github.com/ezio1119/fishapp-chat/usecase/interactor"
 	"github.com/golang/protobuf/ptypes/empty"
 	"golang.org/x/sync/errgroup"
@@ -16,11 +16,11 @@ type chatController struct {
 	chatInteractor interactor.ChatInteractor
 }
 
-func NewChatController(ci interactor.ChatInteractor) chat_grpc.ChatServiceServer {
+func NewChatController(ci interactor.ChatInteractor) chat.ChatServiceServer {
 	return &chatController{ci}
 }
 
-func (c *chatController) GetRoom(ctx context.Context, in *chat_grpc.GetRoomReq) (*chat_grpc.Room, error) {
+func (c *chatController) GetRoom(ctx context.Context, in *chat.GetRoomReq) (*chat.Room, error) {
 	if (in.Id == 0 && in.PostId == 0) || (in.Id != 0 && in.PostId != 0) {
 		return nil, status.Error(codes.InvalidArgument, "invalid GetRoomReq.Id, GetRoomReq.PostId: value must be set either id or post_id")
 	}
@@ -31,7 +31,7 @@ func (c *chatController) GetRoom(ctx context.Context, in *chat_grpc.GetRoomReq) 
 	return convRoomProto(r)
 }
 
-func (c *chatController) CreateRoom(ctx context.Context, in *chat_grpc.CreateRoomReq) (*chat_grpc.Room, error) {
+func (c *chatController) CreateRoom(ctx context.Context, in *chat.CreateRoomReq) (*chat.Room, error) {
 	r := &domain.Room{
 		PostID: in.PostId,
 		Members: []*domain.Member{
@@ -44,7 +44,7 @@ func (c *chatController) CreateRoom(ctx context.Context, in *chat_grpc.CreateRoo
 	return convRoomProto(r)
 }
 
-func (c *chatController) GetMember(ctx context.Context, in *chat_grpc.GetMemberReq) (*chat_grpc.Member, error) {
+func (c *chatController) GetMember(ctx context.Context, in *chat.GetMemberReq) (*chat.Member, error) {
 	m, err := c.chatInteractor.GetMember(ctx, in.RoomId, in.UserId)
 	if err != nil {
 		return nil, err
@@ -52,7 +52,7 @@ func (c *chatController) GetMember(ctx context.Context, in *chat_grpc.GetMemberR
 	return convMemberProto(m)
 }
 
-func (c *chatController) ListMembers(ctx context.Context, in *chat_grpc.ListMembersReq) (*chat_grpc.ListMembersRes, error) {
+func (c *chatController) ListMembers(ctx context.Context, in *chat.ListMembersReq) (*chat.ListMembersRes, error) {
 	list, err := c.chatInteractor.ListMembers(ctx, in.RoomId)
 	if err != nil {
 		return nil, err
@@ -61,10 +61,10 @@ func (c *chatController) ListMembers(ctx context.Context, in *chat_grpc.ListMemb
 	if err != nil {
 		return nil, err
 	}
-	return &chat_grpc.ListMembersRes{Members: listMProto}, nil
+	return &chat.ListMembersRes{Members: listMProto}, nil
 }
 
-func (c *chatController) CreateMember(ctx context.Context, in *chat_grpc.CreateMemberReq) (*chat_grpc.Member, error) {
+func (c *chatController) CreateMember(ctx context.Context, in *chat.CreateMemberReq) (*chat.Member, error) {
 	m := &domain.Member{RoomID: in.RoomId, UserID: in.UserId}
 	if err := c.chatInteractor.CreateMember(ctx, m); err != nil {
 		return nil, err
@@ -72,14 +72,14 @@ func (c *chatController) CreateMember(ctx context.Context, in *chat_grpc.CreateM
 	return convMemberProto(m)
 }
 
-func (c *chatController) DeleteMember(ctx context.Context, in *chat_grpc.DeleteMemberReq) (*empty.Empty, error) {
+func (c *chatController) DeleteMember(ctx context.Context, in *chat.DeleteMemberReq) (*empty.Empty, error) {
 	if err := c.chatInteractor.DeleteMember(ctx, in.RoomId, in.UserId); err != nil {
 		return nil, err
 	}
 	return &empty.Empty{}, nil
 }
 
-func (c *chatController) ListMessages(ctx context.Context, in *chat_grpc.ListMessagesReq) (*chat_grpc.ListMessagesRes, error) {
+func (c *chatController) ListMessages(ctx context.Context, in *chat.ListMessagesReq) (*chat.ListMessagesRes, error) {
 	list, err := c.chatInteractor.ListMessages(ctx, in.RoomId)
 	if err != nil {
 		return nil, err
@@ -88,10 +88,10 @@ func (c *chatController) ListMessages(ctx context.Context, in *chat_grpc.ListMes
 	if err != nil {
 		return nil, err
 	}
-	return &chat_grpc.ListMessagesRes{Messages: listMProto}, nil
+	return &chat.ListMessagesRes{Messages: listMProto}, nil
 }
 
-func (c *chatController) CreateMessage(ctx context.Context, in *chat_grpc.CreateMessageReq) (*chat_grpc.Message, error) {
+func (c *chatController) CreateMessage(ctx context.Context, in *chat.CreateMessageReq) (*chat.Message, error) {
 	m := &domain.Message{
 		Body:   in.Body,
 		RoomID: in.RoomId,
@@ -103,7 +103,7 @@ func (c *chatController) CreateMessage(ctx context.Context, in *chat_grpc.Create
 	return convMessageProto(m)
 }
 
-func (c *chatController) StreamMessage(in *chat_grpc.StreamMessageReq, stream chat_grpc.ChatService_StreamMessageServer) error {
+func (c *chatController) StreamMessage(in *chat.StreamMessageReq, stream chat.ChatService_StreamMessageServer) error {
 	eg, ctx := errgroup.WithContext(stream.Context())
 	msgChan := make(chan *domain.Message)
 	go func() {

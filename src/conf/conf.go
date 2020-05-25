@@ -1,9 +1,6 @@
 package conf
 
 import (
-	"fmt"
-	"log"
-	"os"
 	"strings"
 
 	"github.com/davecgh/go-spew/spew"
@@ -29,6 +26,11 @@ type config struct {
 		Port string
 		Net  string
 	}
+	Nats struct {
+		URL        string
+		ClusterID  string
+		QueueGroup string
+	}
 	Sv struct {
 		Timeout int64
 		Port    string
@@ -47,13 +49,11 @@ func init() {
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
 	if err := viper.ReadInConfig(); err != nil {
-		fmt.Println(err)
-		log.Fatalln(err)
+		panic(err)
 	}
 
 	if err := viper.Unmarshal(&C); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		panic(err)
 	}
 
 	spew.Dump(C)

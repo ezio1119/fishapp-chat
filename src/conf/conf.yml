@@ -14,6 +14,10 @@ kvs:
   host: chat-kvs
   port: 6379
   net: tcp
+nats:
+  url: "nats-streaming:4223"
+  clusterid: "fishapp-cluster"
+  queuegroup: "fishapp-chat"
 sv:
   timeout: 2
   port: 50051

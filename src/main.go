@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"net"
 	"time"
 
@@ -14,26 +13,37 @@ import (
 
 func main() {
 	dbConn := infrastructure.NewGormConn()
-	r := infrastructure.NewRedisClient()
-	defer func() {
-		err := dbConn.Close()
-		if err != nil {
-			log.Fatal(err)
-		}
-	}()
-	c := controllers.NewChatController(
+	defer dbConn.Close()
+
+	rClient := infrastructure.NewRedisClient()
+	defer rClient.Close()
+
+	natsConn := infrastructure.NewNatsStreamingConn()
+	defer natsConn.Close()
+
+	timeOut := time.Duration(conf.C.Sv.Timeout) * time.Second
+
+	chatC := controllers.NewChatController(
 		interactor.NewChatInteractor(
 			dbConn,
-			r,
-			time.Duration(conf.C.Sv.Timeout)*time.Second,
+			rClient,
+			timeOut,
 		),
 	)
-	server := infrastructure.NewGrpcServer(middleware.InitMiddleware(), c)
+
+	eventC := controllers.NewEventController(interactor.NewEventInteractor(dbConn, timeOut))
+
+	server := infrastructure.NewGrpcServer(middleware.InitMiddleware(), chatC)
+
+	if err := infrastructure.StartSubscribeNats(eventC, natsConn); err != nil {
+		panic(err)
+	}
+
 	list, err := net.Listen("tcp", ":"+conf.C.Sv.Port)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 	if err = server.Serve(list); err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 }

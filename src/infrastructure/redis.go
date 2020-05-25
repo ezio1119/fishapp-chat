@@ -1,10 +1,8 @@
 package infrastructure
 
 import (
-	"log"
-
 	"github.com/ezio1119/fishapp-chat/conf"
-	"github.com/go-redis/redis/v7"
+	"github.com/go-redis/redis"
 )
 
 func NewRedisClient() *redis.Client {
@@ -16,7 +14,7 @@ func NewRedisClient() *redis.Client {
 	})
 	_, err := client.Ping().Result()
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 	return client
 }

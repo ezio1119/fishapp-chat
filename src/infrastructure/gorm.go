@@ -1,7 +1,6 @@
 package infrastructure
 
 import (
-	"log"
 	"time"
 
 	"github.com/ezio1119/fishapp-chat/conf"
@@ -23,11 +22,11 @@ func NewGormConn() *gorm.DB {
 
 	dbConn, err := gorm.Open(conf.C.Db.Dbms, mysqlConf.FormatDSN())
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 	err = dbConn.DB().Ping()
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 	if conf.C.Sv.Debug {
 		dbConn.LogMode(true)

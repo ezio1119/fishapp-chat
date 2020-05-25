@@ -2,11 +2,11 @@ package controllers
 
 import (
 	"github.com/ezio1119/fishapp-chat/domain"
-	"github.com/ezio1119/fishapp-chat/interfaces/controllers/chat_grpc"
+	"github.com/ezio1119/fishapp-chat/pb/chat"
 	"github.com/golang/protobuf/ptypes"
 )
 
-func convRoomProto(r *domain.Room) (*chat_grpc.Room, error) {
+func convRoomProto(r *domain.Room) (*chat.Room, error) {
 	uAt, err := ptypes.TimestampProto(r.UpdatedAt)
 	if err != nil {
 		return nil, err
@@ -15,7 +15,7 @@ func convRoomProto(r *domain.Room) (*chat_grpc.Room, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &chat_grpc.Room{
+	return &chat.Room{
 		Id:        r.ID,
 		PostId:    r.PostID,
 		CreatedAt: cAt,
@@ -23,7 +23,7 @@ func convRoomProto(r *domain.Room) (*chat_grpc.Room, error) {
 	}, nil
 }
 
-func convMemberProto(m *domain.Member) (*chat_grpc.Member, error) {
+func convMemberProto(m *domain.Member) (*chat.Member, error) {
 	uAt, err := ptypes.TimestampProto(m.UpdatedAt)
 	if err != nil {
 		return nil, err
@@ -32,7 +32,7 @@ func convMemberProto(m *domain.Member) (*chat_grpc.Member, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &chat_grpc.Member{
+	return &chat.Member{
 		Id:        m.ID,
 		RoomId:    m.RoomID,
 		UserId:    m.UserID,
@@ -41,8 +41,8 @@ func convMemberProto(m *domain.Member) (*chat_grpc.Member, error) {
 	}, nil
 }
 
-func convListMembersProto(list []*domain.Member) ([]*chat_grpc.Member, error) {
-	listM := make([]*chat_grpc.Member, len(list))
+func convListMembersProto(list []*domain.Member) ([]*chat.Member, error) {
+	listM := make([]*chat.Member, len(list))
 	for i, m := range list {
 		mProto, err := convMemberProto(m)
 		if err != nil {
@@ -53,7 +53,7 @@ func convListMembersProto(list []*domain.Member) ([]*chat_grpc.Member, error) {
 	return listM, nil
 }
 
-func convMessageProto(m *domain.Message) (*chat_grpc.Message, error) {
+func convMessageProto(m *domain.Message) (*chat.Message, error) {
 	uAt, err := ptypes.TimestampProto(m.UpdatedAt)
 	if err != nil {
 		return nil, err
@@ -62,7 +62,7 @@ func convMessageProto(m *domain.Message) (*chat_grpc.Message, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &chat_grpc.Message{
+	return &chat.Message{
 		Id:        m.ID,
 		Body:      m.Body,
 		RoomId:    m.RoomID,
@@ -72,8 +72,8 @@ func convMessageProto(m *domain.Message) (*chat_grpc.Message, error) {
 	}, nil
 }
 
-func convListMessagesProto(list []*domain.Message) ([]*chat_grpc.Message, error) {
-	listM := make([]*chat_grpc.Message, len(list))
+func convListMessagesProto(list []*domain.Message) ([]*chat.Message, error) {
+	listM := make([]*chat.Message, len(list))
 	for i, m := range list {
 		mProto, err := convMessageProto(m)
 		if err != nil {

@@ -7,10 +7,9 @@ import (
 	"time"
 
 	"github.com/ezio1119/fishapp-chat/domain"
-	"github.com/go-redis/redis/v7"
+	"github.com/go-redis/redis"
 	"github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
-
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
