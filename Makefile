@@ -11,18 +11,17 @@ sql-doc:
 	doc -f -t svg mysql://root:password@$(API)-db:3306/$(API)_DB ./
 
 proto:
-	docker run --rm -v $(CURRENT_DIR)/src/pb:/pb -v $(CURRENT_DIR)/schema:/proto ezio1119/protoc \
+	docker run --rm -v $(CURRENT_DIR)/pb:/pb -v $(CURRENT_DIR)/schema:/proto ezio1119/protoc \
 	-I/proto \
 	-I/go/src/github.com/envoyproxy/protoc-gen-validate \
-	--go_opt=paths=source_relative \
 	--go_out=plugins=grpc:/pb \
-	--validate_out="lang=go,paths=source_relative:/pb" \
-	chat/chat.proto event/event.proto
+	--validate_out="lang=go:/pb" \
+	chat.proto event.proto post.proto
 
 migrate:
 	docker run --rm -it --name migrate --net=fishapp-net \
 	-v $(CURRENT_DIR)/db/sql:/sql migrate/migrate:latest \
-	-path /sql/ -database "mysql://root:password@tcp($(API)-db:3306)/$(API)_DB" up
+	-path /sql/ -database "mysql://root:password@tcp($(API)-db:3306)/$(API)_DB" ${a}
 
 cli:
 		docker run --entrypoint sh --rm -it --net=fishapp-net namely/grpc-cli
@@ -45,11 +44,14 @@ build:
 down:
 	$(DC) down
 
+stop:
+	$(DC) stop
+
 exec:
 	$(DC) exec $(API) sh
 
 logs:
-	docker logs -f --tail 100 $(API)_$(API)_1
+	docker logs fishapp-chat_chat_1 -f
 
 redis:
 	$(DC) exec $(API)-kvs sh

@@ -5,7 +5,7 @@ services:
       context: .
       target: dev
     volumes:
-      - ./src/.:/app
+      - .:/app
     depends_on:
       - chat-kvs
       - chat-db
@@ -17,7 +17,7 @@ services:
     image: mysql:8.0
     volumes:
       - chat-data:/var/lib/mysql
-    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_ja_0900_as_cs --log-bin=chatdb.bin
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_ja_0900_as_cs --log-bin=chatdb.bin  --binlog-format=ROW
     tty: true
     environment:
       MYSQL_ROOT_PASSWORD: password
