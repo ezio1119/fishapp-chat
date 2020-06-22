@@ -41,7 +41,7 @@ waitdb: updb
 
 waitredis:
 	docker run --rm --name dockerize --net $(NET) jwilder/dockerize \
-	-wait tcp://$(RESI_URL):6379
+	-wait tcp://$(REDIS_SVC):6379
 
 waitnats:
 	docker run --rm --name dockerize --net $(NET) jwilder/dockerize \
