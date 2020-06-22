@@ -11,13 +11,27 @@ func convRoomProto(r *domain.Room) (*pb.Room, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	cAt, err := ptypes.TimestampProto(r.CreatedAt)
 	if err != nil {
 		return nil, err
 	}
+
+	memP, err := convListMembersProto(r.Members)
+	if err != nil {
+		return nil, err
+	}
+
+	mP, err := convListMessagesProto(r.Messages)
+	if err != nil {
+		return nil, err
+	}
+
 	return &pb.Room{
 		Id:        r.ID,
 		PostId:    r.PostID,
+		Members:   memP,
+		Messages:  mP,
 		CreatedAt: cAt,
 		UpdatedAt: uAt,
 	}, nil

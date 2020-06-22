@@ -24,6 +24,7 @@ func NewGormConn() *gorm.DB {
 	if err != nil {
 		panic(err)
 	}
+
 	err = dbConn.DB().Ping()
 	if err != nil {
 		panic(err)

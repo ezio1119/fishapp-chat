@@ -22,3 +22,6 @@ sv:
   timeout: 2
   port: 50051
   debug: true
+  imagechunksize: 16384
+api:
+  image_url: image:50051

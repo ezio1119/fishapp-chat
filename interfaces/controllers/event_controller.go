@@ -72,3 +72,54 @@ func (c *eventController) PostDeleted(m *stan.Msg) {
 		log.Println(err)
 	}
 }
+
+func (c *eventController) ApplyPostCreated(m *stan.Msg) {
+	ctx := context.Background()
+
+	e := &pb.Event{}
+	if err := protojson.Unmarshal(m.MsgProto.Data, e); err != nil {
+		log.Printf("error wrong subject data type : %s", err)
+		return
+	}
+	log.Printf("recieved apply.post.created event: %#v\n", e)
+
+	data := &pb.ApplyPostCreated{}
+	if err := protojson.Unmarshal(e.EventData, data); err != nil {
+		log.Printf("error wrong eventdata type: %s", err)
+		return
+	}
+
+	if err := c.eventInteractor.ApplyPostCreated(ctx, data.ApplyPost.Id, data.ApplyPost.UserId); err != nil {
+		log.Println(err)
+		return
+	}
+
+	if err := m.Ack(); err != nil {
+		log.Println(err)
+	}
+}
+
+func (c *eventController) ApplyPostDeleted(m *stan.Msg) {
+	ctx := context.Background()
+
+	e := &pb.Event{}
+	if err := protojson.Unmarshal(m.MsgProto.Data, e); err != nil {
+		log.Printf("error wrong subject data type : %s", err)
+		return
+	}
+	log.Printf("recieved apply.post.deleted event: %#v\n", e)
+
+	data := &pb.ApplyPostDeleted{}
+	if err := protojson.Unmarshal(e.EventData, data); err != nil {
+		log.Printf("error wrong eventdata type: %s", err)
+		return
+	}
+
+	if err := c.eventInteractor.ApplyPostDeleted(ctx, data.ApplyPost.Id, data.ApplyPost.UserId); err != nil {
+		log.Println(err)
+		return
+	}
+	if err := m.Ack(); err != nil {
+		log.Println(err)
+	}
+}

@@ -7,6 +7,7 @@ import (
 
 	"github.com/ezio1119/fishapp-chat/domain"
 	"github.com/ezio1119/fishapp-chat/pb"
+	"github.com/ezio1119/fishapp-chat/usecase/repo"
 	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
 	"google.golang.org/protobuf/encoding/protojson"
@@ -14,16 +15,19 @@ import (
 
 type eventInteractor struct {
 	db         *gorm.DB
+	imageRepo  repo.ImageRepo
 	ctxTimeout time.Duration
 }
 
-func NewEventInteractor(db *gorm.DB, t time.Duration) EventInteractor {
-	return &eventInteractor{db, t}
+func NewEventInteractor(db *gorm.DB, i repo.ImageRepo, t time.Duration) *eventInteractor {
+	return &eventInteractor{db, i, t}
 }
 
 type EventInteractor interface {
 	CreateRoom(ctx context.Context, r *domain.Room, sagaID string) error
 	PostDeleted(ctx context.Context, pID int64) error
+	ApplyPostCreated(ctx context.Context, postID int64, userID int64) error
+	ApplyPostDeleted(ctx context.Context, postID int64, userID int64) error
 }
 
 func (i *eventInteractor) CreateRoom(ctx context.Context, r *domain.Room, sagaID string) error {
@@ -88,8 +92,42 @@ func (i *eventInteractor) CreateRoom(ctx context.Context, r *domain.Room, sagaID
 }
 
 func (i *eventInteractor) PostDeleted(ctx context.Context, pID int64) error {
-	if err := i.db.Where("post_id = ?", pID).Delete(domain.Room{}).Error; err != nil {
+	r := &domain.Room{}
+	msgs := []*domain.Message{}
+
+	if err := i.db.Where("post_id = ?", pID).Find(r).Error; err != nil {
 		return err
 	}
-	return nil
+
+	if err := i.db.Where("room_id = ?", r.ID).Find(msgs).Error; err != nil {
+		return err
+	}
+
+	msgIDs := make([]int64, len(msgs))
+	for i, m := range msgs {
+		msgIDs[i] = m.ID
+	}
+
+	if err := i.imageRepo.BatchDeleteImagesByMessageIDs(ctx, msgIDs); err != nil {
+		return err
+	}
+
+	return i.db.Where("post_id = ?", pID).Delete(domain.Room{}).Error
+}
+
+func (i *eventInteractor) ApplyPostCreated(ctx context.Context, pID int64, uID int64) error {
+	r := &domain.Room{}
+	if err := i.db.Where("post_id = ?", pID).Find(r).Error; err != nil {
+		return err
+	}
+
+	return i.db.Create(&domain.Member{RoomID: r.ID, UserID: uID}).Error
+}
+func (i *eventInteractor) ApplyPostDeleted(ctx context.Context, pID int64, uID int64) error {
+	r := &domain.Room{}
+	if err := i.db.Where("post_id = ?", pID).Find(r).Error; err != nil {
+		return err
+	}
+
+	return i.db.Where("room_id = ? AND user_id = ?", r.ID, uID).Delete(&domain.Member{}).Error
 }

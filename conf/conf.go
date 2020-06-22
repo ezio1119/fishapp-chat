@@ -32,9 +32,13 @@ type config struct {
 		QueueGroup string
 	}
 	Sv struct {
-		Timeout int64
-		Port    string
-		Debug   bool
+		Timeout        int64
+		Port           string
+		Debug          bool
+		ImageChunkSize int64
+	}
+	API struct {
+		ImageURL string `mapstructure:"image_url"`
 	}
 }
 

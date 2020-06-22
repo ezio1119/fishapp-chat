@@ -1,12 +1,15 @@
 package interactor
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"strconv"
 	"time"
 
 	"github.com/ezio1119/fishapp-chat/domain"
+	"github.com/ezio1119/fishapp-chat/usecase/repo"
 	"github.com/go-redis/redis"
 	"github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
@@ -18,22 +21,23 @@ type ChatInteractor interface {
 	CreateRoom(ctx context.Context, r *domain.Room) error
 	GetRoom(ctx context.Context, id int64, postID int64) (*domain.Room, error)
 	ListMembers(ctx context.Context, roomID int64) ([]*domain.Member, error)
-	GetMember(ctx context.Context, roomID int64, userID int64) (*domain.Member, error)
+	IsMember(ctx context.Context, roomID int64, postID int64, userID int64) (bool, error)
 	CreateMember(ctx context.Context, m *domain.Member) error
 	DeleteMember(ctx context.Context, roomID int64, userID int64) error
 	ListMessages(ctx context.Context, roomID int64) ([]*domain.Message, error)
-	CreateMessage(ctx context.Context, m *domain.Message) error
-	StreamMessage(ctx context.Context, roomID int64, userID int64, msgChan chan *domain.Message) error
+	CreateMessage(ctx context.Context, m *domain.Message, imageBuf *bytes.Buffer) error
+	StreamMessage(ctx context.Context, roomID int64, msgChan chan *domain.Message) error
 }
 
 type chatInteractor struct {
 	db         *gorm.DB
 	rdb        *redis.Client
+	imageRepo  repo.ImageRepo
 	ctxTimeout time.Duration
 }
 
-func NewChatInteractor(db *gorm.DB, redis *redis.Client, t time.Duration) ChatInteractor {
-	return &chatInteractor{db, redis, t}
+func NewChatInteractor(db *gorm.DB, r *redis.Client, i repo.ImageRepo, t time.Duration) *chatInteractor {
+	return &chatInteractor{db, r, i, t}
 }
 
 func (i *chatInteractor) CreateRoom(ctx context.Context, r *domain.Room) error {
@@ -45,29 +49,42 @@ func (i *chatInteractor) CreateRoom(ctx context.Context, r *domain.Room) error {
 
 func (i *chatInteractor) GetRoom(ctx context.Context, id int64, pID int64) (*domain.Room, error) {
 	r := &domain.Room{}
+
 	if id != 0 {
-		if err := i.db.Take(id, &r).Error; err != nil {
+		r.ID = id
+		if err := i.db.Preload("Members").Preload("Messages").Take(r).Error; err != nil {
 			return nil, err
 		}
 	}
+
 	if pID != 0 {
-		if err := i.db.Where("post_id = ?", pID).Take(&r).Error; err != nil {
+		if err := i.db.Where("post_id = ?", pID).Preload("Members").Preload("Messages").Take(r).Error; err != nil {
 			return nil, err
 		}
 	}
+
 	return r, nil
 }
 
-func (i *chatInteractor) GetMember(ctx context.Context, rID int64, uID int64) (*domain.Member, error) {
+func (i *chatInteractor) IsMember(ctx context.Context, rID int64, pID int64, uID int64) (bool, error) {
+
+	if rID == 0 {
+		r := &domain.Room{}
+		if err := i.db.Where("post_id = ?", pID).Take(r).Error; err != nil {
+			return false, err
+		}
+		rID = r.ID
+	}
+
 	m := &domain.Member{}
 	if err := i.db.Where("room_id = ? AND user_id = ?", rID, uID).Take(m).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
-			err = status.Errorf(codes.NotFound, "member with user_id='%d', room_id='%d' is not found", uID, rID)
+			return false, nil
 		}
-		return nil, err
+		return false, err
 	}
 
-	return m, nil
+	return true, nil
 }
 
 func (i *chatInteractor) ListMembers(ctx context.Context, rID int64) ([]*domain.Member, error) {
@@ -106,20 +123,39 @@ func (i *chatInteractor) ListMessages(ctx context.Context, rID int64) ([]*domain
 	return r.Messages, nil
 }
 
-func (i *chatInteractor) CreateMessage(ctx context.Context, m *domain.Message) error {
+func (i *chatInteractor) CreateMessage(ctx context.Context, m *domain.Message, imageBuf *bytes.Buffer) error {
 	if err := i.db.Create(m).Error; err != nil {
+		fmt.Println(err)
 		return err
 	}
 
-	mb, err := json.Marshal(*m)
+	if imageBuf.Len() != 0 {
+		if err := i.imageRepo.BatchCreateImages(ctx, m.ID, []*bytes.Buffer{imageBuf}); err != nil {
+			if err := i.db.Delete(m).Error; err != nil {
+				return err
+			}
+			return err
+		}
+	}
+
+	mb, err := json.Marshal(m)
 	if err != nil {
 		return err
 	}
-	i.rdb.Publish(strconv.FormatInt(m.RoomID, 10), mb)
+
+	if err := i.rdb.Publish(strconv.FormatInt(m.RoomID, 10), mb).Err(); err != nil {
+		if err := i.db.Delete(m).Error; err != nil {
+			return err
+		}
+		if err := i.imageRepo.DeleteImagesByMessageID(ctx, m.ID); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
-func (i *chatInteractor) StreamMessage(ctx context.Context, rID int64, uID int64, msgChan chan *domain.Message) error {
+func (i *chatInteractor) StreamMessage(ctx context.Context, rID int64, msgChan chan *domain.Message) error {
 	pubsub := i.rdb.WithContext(ctx).Subscribe(strconv.FormatInt(rID, 10))
 	go func() {
 		<-ctx.Done()
@@ -128,12 +164,12 @@ func (i *chatInteractor) StreamMessage(ctx context.Context, rID int64, uID int64
 
 	for m := range pubsub.Channel() {
 		msg := &domain.Message{}
+
 		if err := json.Unmarshal([]byte(m.Payload), &msg); err != nil {
 			return err
 		}
-		if msg.UserID != uID {
-			msgChan <- msg
-		}
+
+		msgChan <- msg
 	}
 	return nil
 }
