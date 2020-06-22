@@ -6,6 +6,8 @@ DB_USER = root
 DB_PWD = password
 NATS_URL = nats-streaming:4223
 NET = fishapp-net
+GRPC_SVC = ChatService
+IMAGE_URL = image:50051
 PJT_NAME = $(notdir $(PWD))
 
 createnet:
@@ -21,11 +23,11 @@ proto:
 	-I/go/src/github.com/envoyproxy/protoc-gen-validate \
 	--go_out=plugins=grpc:/pb \
 	--validate_out="lang=go:/pb" \
-	post.proto event.proto image.proto
+	chat.proto post.proto event.proto image.proto
 
 cli:
 	docker run --rm --name grpc_cli --net $(NET) znly/grpc_cli \
-	call $(HOST):50051 $(HOST).PostService.$(m) "$(q)"
+	call $(SVC):50051 $(SVC).${GRPC_SVC}.$(m) "$(q)"
 
 waitdb: updb
 	docker run --rm --name dockerize --net $(NET) jwilder/dockerize \
@@ -35,6 +37,10 @@ waitdb: updb
 waitnats:
 	docker run --rm --name dockerize --net $(NET) jwilder/dockerize \
 	-wait tcp://$(NATS_URL)
+
+waitimage:
+	docker run --rm --name grpc_health_probe --net $(NET) stefanprodan/grpc_health_probe:v0.3.0 \
+	grpc_health_probe -addr=$(IMAGE_URL)
 
 migrate: waitdb
 	docker run --rm --name migrate --net $(NET) \
@@ -50,7 +56,7 @@ test:
 	go tool cover -html=cover.out -o ./cover.html" && \
 	open ./src/cover.html
 
-up: migrate waitnats
+up: migrate waitnats waitimage
 	docker-compose up -d $(SVC)
 
 updb:
