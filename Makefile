@@ -14,7 +14,6 @@ DB_PWD = password
 IMAGE_URL = image:50051
 NATS_URL = nats-streaming:4223
 
-
 createnet:
 	docker network create $(NET)
 
@@ -39,7 +38,7 @@ waitdb: updb
 	-timeout 30s \
 	-wait tcp://$(DB_SVC):3306
 
-waitredis:
+waitredis: upredis
 	docker run --rm --name dockerize --net $(NET) jwilder/dockerize \
 	-wait tcp://$(REDIS_SVC):6379
 
@@ -88,6 +87,9 @@ logs:
 
 dblogs:
 	docker logs -f --tail 100 $(PJT_NAME)_$(DB_SVC)_1
+
+redislogs:
+	docker logs -f --tail 100 $(PJT_NAME)_$(REDIS_SVC)_1
 
 rmvol:
 	docker-compose down -v
