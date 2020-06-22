@@ -4,7 +4,6 @@ DB_SVC = chat-db
 DB_NAME = chat_DB
 DB_USER = root
 DB_PWD = password
-DB_VOL_NAME = chat-data
 NATS_URL = nats-streaming:4223
 NET = fishapp-net
 PJT_NAME = $(notdir $(PWD))
@@ -72,5 +71,5 @@ logs:
 dblogs:
 	docker logs -f --tail 100 $(PJT_NAME)_$(DB_SVC)_1
 
-rmvol: down
-	docker volume rm $(PJT_NAME)_$(DB_VOL_NAME)
+rmvol:
+	docker-compose down -v
