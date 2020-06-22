@@ -1,14 +1,19 @@
 CWD = $(shell pwd)
+PJT_NAME = $(notdir $(PWD))
+NET = fishapp-net
+
 SVC = chat
+REDIS_SVC = chat-kvs
+GRPC_SVC_NAME = ChatService
+
 DB_SVC = chat-db
 DB_NAME = chat_DB
 DB_USER = root
 DB_PWD = password
-NATS_URL = nats-streaming:4223
-NET = fishapp-net
-GRPC_SVC = ChatService
+
 IMAGE_URL = image:50051
-PJT_NAME = $(notdir $(PWD))
+NATS_URL = nats-streaming:4223
+
 
 createnet:
 	docker network create $(NET)
@@ -27,12 +32,16 @@ proto:
 
 cli:
 	docker run --rm --name grpc_cli --net $(NET) znly/grpc_cli \
-	call $(SVC):50051 $(SVC).${GRPC_SVC}.$(m) "$(q)"
+	call $(SVC):50051 $(SVC).${GRPC_SVC_NAME}.$(m) "$(q)"
 
 waitdb: updb
 	docker run --rm --name dockerize --net $(NET) jwilder/dockerize \
 	-timeout 30s \
 	-wait tcp://$(DB_SVC):3306
+
+waitredis:
+	docker run --rm --name dockerize --net $(NET) jwilder/dockerize \
+	-wait tcp://$(RESI_URL):6379
 
 waitnats:
 	docker run --rm --name dockerize --net $(NET) jwilder/dockerize \
@@ -56,11 +65,14 @@ test:
 	go tool cover -html=cover.out -o ./cover.html" && \
 	open ./src/cover.html
 
-up: migrate waitnats waitimage
+up: migrate waitimage waitredis waitnats
 	docker-compose up -d $(SVC)
 
 updb:
 	docker-compose up -d $(DB_SVC)
+
+upredis:
+	docker-compose up -d $(REDIS_SVC)
 
 build:
 	docker-compose build
