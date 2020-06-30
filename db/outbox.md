@@ -1,4 +1,4 @@
-# messages
+# outbox
 
 ## Description
 
@@ -6,16 +6,16 @@
 <summary><strong>Table Definition</strong></summary>
 
 ```sql
-CREATE TABLE `messages` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `body` varchar(255) COLLATE utf8mb4_ja_0900_as_cs NOT NULL,
-  `room_id` int NOT NULL,
-  `user_id` int NOT NULL,
+CREATE TABLE `outbox` (
+  `id` varchar(255) COLLATE utf8mb4_ja_0900_as_cs NOT NULL,
+  `event_type` varchar(255) COLLATE utf8mb4_ja_0900_as_cs NOT NULL,
+  `event_data` json NOT NULL,
+  `aggregate_id` varchar(255) COLLATE utf8mb4_ja_0900_as_cs DEFAULT NULL,
+  `aggregate_type` varchar(255) COLLATE utf8mb4_ja_0900_as_cs DEFAULT NULL,
+  `channel` varchar(255) COLLATE utf8mb4_ja_0900_as_cs NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `room_id` (`room_id`),
-  CONSTRAINT `messages_ibfk_1` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`) ON DELETE CASCADE
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_ja_0900_as_cs
 ```
 
@@ -25,10 +25,12 @@ CREATE TABLE `messages` (
 
 | Name | Type | Default | Nullable | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| id | int |  | false |  |  |  |
-| body | varchar(255) |  | false |  |  |  |
-| room_id | int |  | false |  | [rooms](rooms.md) |  |
-| user_id | int |  | false |  |  |  |
+| id | varchar(255) |  | false |  |  |  |
+| event_type | varchar(255) |  | false |  |  |  |
+| event_data | json |  | false |  |  |  |
+| aggregate_id | varchar(255) |  | true |  |  |  |
+| aggregate_type | varchar(255) |  | true |  |  |  |
+| channel | varchar(255) |  | false |  |  |  |
 | created_at | datetime |  | false |  |  |  |
 | updated_at | datetime |  | false |  |  |  |
 
@@ -36,19 +38,17 @@ CREATE TABLE `messages` (
 
 | Name | Type | Definition |
 | ---- | ---- | ---------- |
-| messages_ibfk_1 | FOREIGN KEY | FOREIGN KEY (room_id) REFERENCES rooms (id) |
 | PRIMARY | PRIMARY KEY | PRIMARY KEY (id) |
 
 ## Indexes
 
 | Name | Definition |
 | ---- | ---------- |
-| room_id | KEY room_id (room_id) USING BTREE |
 | PRIMARY | PRIMARY KEY (id) USING BTREE |
 
 ## Relations
 
-![er](messages.svg)
+![er](outbox.svg)
 
 ---
 

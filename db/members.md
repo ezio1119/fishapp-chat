@@ -7,9 +7,9 @@
 
 ```sql
 CREATE TABLE `members` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `room_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `room_id` int NOT NULL,
+  `user_id` int NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
@@ -24,9 +24,9 @@ CREATE TABLE `members` (
 
 | Name | Type | Default | Nullable | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| id | int(11) |  | false |  |  |  |
-| room_id | int(11) |  | false |  | [rooms](rooms.md) |  |
-| user_id | int(11) |  | false |  |  |  |
+| id | int |  | false |  |  |  |
+| room_id | int |  | false |  | [rooms](rooms.md) |  |
+| user_id | int |  | false |  |  |  |
 | created_at | datetime |  | false |  |  |  |
 | updated_at | datetime |  | false |  |  |  |
 

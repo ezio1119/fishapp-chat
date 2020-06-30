@@ -7,8 +7,8 @@
 
 ```sql
 CREATE TABLE `rooms` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `post_id` int(11) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `post_id` int NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
@@ -22,8 +22,8 @@ CREATE TABLE `rooms` (
 
 | Name | Type | Default | Nullable | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| id | int(11) |  | false | [members](members.md) [messages](messages.md) |  |  |
-| post_id | int(11) |  | false |  |  |  |
+| id | int |  | false | [members](members.md) [messages](messages.md) |  |  |
+| post_id | int |  | false |  |  |  |
 | created_at | datetime |  | false |  |  |  |
 | updated_at | datetime |  | false |  |  |  |
 
