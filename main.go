@@ -12,18 +12,35 @@ import (
 	"github.com/ezio1119/fishapp-chat/interfaces/repo"
 	"github.com/ezio1119/fishapp-chat/pb"
 	"github.com/ezio1119/fishapp-chat/usecase/interactor"
+	"github.com/go-redis/redis"
 	"google.golang.org/grpc"
 )
 
 func main() {
 	ctx := context.Background()
-	dbConn := infrastructure.NewGormConn()
+	dbConn, err := infrastructure.NewGormConn()
+	if err != nil {
+		panic(err)
+	}
+
 	defer dbConn.Close()
 
-	rClient := infrastructure.NewRedisClient()
-	defer rClient.Close()
+	var redisC *redis.Client
 
-	natsConn := infrastructure.NewNatsStreamingConn()
+	if conf.C.Sv.Debug {
+		redisC, err = infrastructure.NewRedisClient()
+	} else {
+		redisC, err = infrastructure.NewRedisFailoverClient()
+	}
+
+	if err != nil {
+		panic(err)
+	}
+
+	natsConn, err := infrastructure.NewNatsStreamingConn()
+	if err != nil {
+		panic(err)
+	}
 	defer natsConn.Close()
 
 	grpcConn, err := grpc.DialContext(ctx, conf.C.API.ImageURL, grpc.WithInsecure())
@@ -38,7 +55,7 @@ func main() {
 	chatC := controllers.NewChatController(
 		interactor.NewChatInteractor(
 			dbConn,
-			rClient,
+			redisC,
 			imageRepo,
 			timeOut,
 		),

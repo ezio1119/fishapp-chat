@@ -20,11 +20,17 @@ type config struct {
 		AllowNativePasswords bool
 	}
 	Kvs struct {
-		Db   int
-		Pass string
-		Host string
-		Port string
-		Net  string
+		Db       int
+		Pass     string
+		Host     string
+		Port     string
+		Net      string
+		Sentinel struct {
+			Host       string
+			Port       string
+			MasterName string
+			Pass       string
+		}
 	}
 	Nats struct {
 		URL        string
