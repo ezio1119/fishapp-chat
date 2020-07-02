@@ -15,15 +15,15 @@ type EventController interface {
 	ApplyPostDeleted(m *stan.Msg)
 }
 
-func NewNatsStreamingConn() stan.Conn {
+func NewNatsStreamingConn() (stan.Conn, error) {
 	clientID := uuid.New().String()
 	log.Printf("nats clientID is %s", clientID)
 	conn, err := stan.Connect(conf.C.Nats.ClusterID, "fishapp-chat-"+uuid.New().String(), stan.NatsURL(conf.C.Nats.URL))
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
-	return conn
+	return conn, nil
 }
 
 func StartSubscribeNats(c EventController, conn stan.Conn) error {

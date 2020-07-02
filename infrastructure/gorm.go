@@ -8,7 +8,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-func NewGormConn() *gorm.DB {
+func NewGormConn() (*gorm.DB, error) {
 	mysqlConf := &mysql.Config{
 		User:                 conf.C.Db.User,
 		Passwd:               conf.C.Db.Pass,
@@ -22,15 +22,16 @@ func NewGormConn() *gorm.DB {
 
 	dbConn, err := gorm.Open(conf.C.Db.Dbms, mysqlConf.FormatDSN())
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
-	err = dbConn.DB().Ping()
-	if err != nil {
-		panic(err)
+	if err := dbConn.DB().Ping(); err != nil {
+		return nil, err
 	}
+
 	if conf.C.Sv.Debug {
-		dbConn.LogMode(true)
+		dbConn = dbConn.LogMode(true)
 	}
-	return dbConn
+
+	return dbConn, nil
 }
